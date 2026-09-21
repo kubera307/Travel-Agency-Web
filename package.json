@@ -1,0 +1,23 @@
+{
+  "name": "travel-india-platform",
+  "version": "2.0.0",
+  "description": "Travel India - Professional Indian Travel & Tour Booking Platform",
+  "scripts": {
+    "dev": "run.bat",
+    "frontend:dev": "npm --prefix frontend run dev",
+    "frontend:build": "npm --prefix frontend run build",
+    "backend": "python backend/app.py",
+    "test": "python backend/test_api.py"
+  },
+  "keywords": [
+    "travel-india",
+    "bharat-mobility",
+    "tour-booking",
+    "python-flask",
+    "react",
+    "vite",
+    "sqlite"
+  ],
+  "author": "Travel India",
+  "license": "ISC"
+}

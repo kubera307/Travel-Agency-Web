@@ -1,0 +1,108 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-primary: #F7F1E7;
+  --bg-secondary: #EFE4D2;
+  --text-dark: #1D1B18;
+  --text-muted: #6D6A61;
+  --accent-gold: #B99762;
+  --accent-olive: #6D725C;
+  --border-color: rgba(29, 27, 24, 0.1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: #F7F1E7;
+    color: #1D1B18;
+    font-family: 'Manrope', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: #1D1B18;
+  }
+
+  img {
+    @apply block max-w-full;
+  }
+
+  a, button {
+    @apply transition-all duration-200;
+  }
+}
+
+@layer components {
+  /* Minimal Luxury Hairline Borders */
+  .border-luxury-subtle {
+    border-color: rgba(29, 27, 24, 0.08);
+  }
+
+  .border-luxury-medium {
+    border-color: rgba(29, 27, 24, 0.16);
+  }
+
+  /* Quiet Luxury Buttons */
+  .btn-luxury-dark {
+    @apply inline-flex items-center justify-center gap-2 bg-[#1D1B18] text-[#F7F1E7] px-7 py-3.5 text-xs font-semibold uppercase tracking-[0.2em] transition-all duration-300 hover:bg-[#B99762] hover:text-white disabled:opacity-50;
+  }
+
+  .btn-luxury-outline {
+    @apply inline-flex items-center justify-center gap-2 border border-[#1D1B18]/30 bg-transparent text-[#1D1B18] px-7 py-3.5 text-xs font-semibold uppercase tracking-[0.2em] transition-all duration-300 hover:border-[#1D1B18] hover:bg-[#1D1B18]/5 disabled:opacity-50;
+  }
+
+  .btn-luxury-gold {
+    @apply inline-flex items-center justify-center gap-2 bg-[#B99762] text-white px-7 py-3.5 text-xs font-semibold uppercase tracking-[0.2em] transition-all duration-300 hover:bg-[#A3824E] disabled:opacity-50;
+  }
+
+  /* Editorial Section Headers */
+  .editorial-eyebrow {
+    @apply text-[11px] font-semibold uppercase tracking-[0.28em] text-[#B99762] mb-3 block;
+  }
+
+  .editorial-title {
+    @apply font-serif text-3xl sm:text-4xl lg:text-5xl font-normal leading-[1.15] text-[#1D1B18];
+  }
+
+  .editorial-body {
+    @apply font-sans text-sm sm:text-base text-[#6D6A61] leading-relaxed max-w-xl font-normal;
+  }
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #EFE4D2;
+}
+::-webkit-scrollbar-thumb {
+  background: #B99762;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #1D1B18;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

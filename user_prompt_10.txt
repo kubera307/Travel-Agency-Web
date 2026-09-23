@@ -1,0 +1,1005 @@
+<USER_REQUEST>
+I have an existing React + Vite + Tailwind frontend with a Python Flask backend
+and database for an Indian travel/tour booking website.
+
+I want you to implement the following TOURIST/CUSTOMER requirements
+into the existing project.
+
+IMPORTANT:
+
+Do NOT create a separate new project.
+
+First inspect the existing frontend, Flask backend, database schema,
+API routes, authentication, booking system and existing components.
+
+Reuse the existing architecture wherever possible.
+
+==================================================
+1. TOURIST / CUSTOMER MODULE
+==================================================
+
+Create a complete professional Tourist/Customer experience.
+
+The customer should be able to:
+
+- browse trips
+- view destinations
+- view trip details
+- make enquiries
+- contact the company
+- provide feedback
+- submit reviews
+- specify special requirements
+- make secure payments
+- view booking information
+- view previous/upcoming trips
+
+The UI must feel like a professional travel company,
+not a basic college CRUD project.
+
+==================================================
+2. CUSTOMER PROFILE
+==================================================
+
+Create a proper customer profile.
+
+Fields:
+
+customer_id
+full_name
+email
+phone
+profile_image
+date_of_birth (optional)
+address
+city
+state
+country
+emergency_contact (optional)
+created_at
+updated_at
+
+IMPORTANT:
+
+customer_id must be the PRIMARY KEY.
+
+Do NOT use email or phone as the primary key.
+
+Email should be UNIQUE.
+
+Phone should preferably be UNIQUE.
+
+Passwords must never be stored as plain text.
+
+Use secure password hashing.
+
+==================================================
+3. TRIP / TOUR DETAILS
+==================================================
+
+Create a professional trip details page.
+
+Display:
+
+Trip name
+Destination
+Location
+Duration
+Starting price
+Available dates
+Available seats
+Trip category
+Trip images
+Overview
+Highlights
+Itinerary
+Inclusions
+Exclusions
+Accommodation
+Transportation
+Meeting point
+Cancellation policy
+Important information
+Terms & conditions
+
+Add:
+
+[Book Now]
+
+[Send Enquiry]
+
+[Add to Wishlist]
+
+[Contact Us]
+
+The page must be responsive.
+
+==================================================
+4. MANGALORE DESTINATIONS
+==================================================
+
+Create a destination section specifically supporting
+Mangalore and nearby travel destinations.
+
+Examples:
+
+Mangalore
+Panambur Beach
+Tannirbhavi Beach
+St. Aloysius Chapel
+Sultan Battery
+Kadri Manjunath Temple
+Pilikula
+Udupi
+Malpe
+Kapu
+Murudeshwar
+Kudremukh
+Coorg
+
+IMPORTANT:
+
+Do not hardcode the entire destination system.
+
+Create a database-driven destination model so administrators
+can add/update/remove destinations later.
+
+Each destination should support:
+
+destination_id
+name
+slug
+city
+state
+description
+short_description
+image
+latitude
+longitude
+category
+featured
+status
+created_at
+updated_at
+
+==================================================
+5. RECENT HIGHLIGHTS
+==================================================
+
+Create a "Recent Highlights" section on the homepage.
+
+Possible content:
+
+New destinations
+New tours
+Upcoming trips
+Travel events
+Special packages
+Recently added experiences
+
+Display:
+
+image
+title
+short description
+date
+destination
+CTA
+
+Example:
+
+"New: Coastal Karnataka Escape"
+
+"Explore Mangalore, Udupi and Malpe
+in one unforgettable journey."
+
+[Explore Trip →]
+
+Recent highlights should come from the backend/database.
+
+Create an API such as:
+
+GET /api/highlights
+
+Admin should be able to create/update/delete highlights.
+
+==================================================
+6. SERVICES PROVIDED
+==================================================
+
+Create a professional "Our Services" section.
+
+Possible services:
+
+Tour Packages
+Hotel Booking
+Transportation
+Airport Pickup
+Local Sightseeing
+Custom Trip Planning
+Group Tours
+Family Trips
+Corporate Trips
+Adventure Trips
+Honeymoon Packages
+Travel Assistance
+
+Each service should have:
+
+service_id
+name
+slug
+description
+icon
+image
+featured
+status
+created_at
+updated_at
+
+Create:
+
+GET /api/services
+
+Admin CRUD:
+
+POST /api/admin/services
+PUT /api/admin/services/:id
+DELETE /api/admin/services/:id
+
+==================================================
+7. ENQUIRY SYSTEM
+==================================================
+
+Create a proper travel enquiry system.
+
+Customer should be able to submit:
+
+name
+email
+phone
+destination
+trip/tour
+travel_date
+number_of_travellers
+budget (optional)
+message
+special_requirements
+preferred_contact_method
+
+Example:
+
+Preferred contact:
+
+Phone
+Email
+WhatsApp
+
+Backend:
+
+POST /api/enquiries
+
+Admin:
+
+GET /api/admin/enquiries
+
+Admin should be able to update status:
+
+NEW
+CONTACTED
+IN_PROGRESS
+CONVERTED
+CLOSED
+
+Store:
+
+created_at
+updated_at
+
+==================================================
+8. FEEDBACK FORM
+==================================================
+
+Create a separate feedback form.
+
+Fields:
+
+customer
+email
+booking_id (optional)
+rating
+feedback
+category
+
+Categories:
+
+Website
+Booking
+Tour
+Guide
+Transportation
+Hotel
+Customer Support
+Payment
+Other
+
+Status:
+
+PENDING
+REVIEWED
+
+Admin can review feedback.
+
+Do not automatically publish every feedback entry.
+
+==================================================
+9. REVIEW SYSTEM
+==================================================
+
+Create a proper verified review system.
+
+Customer can submit:
+
+tour
+booking
+rating
+review_title
+review_text
+photos (optional)
+
+Rating:
+
+1–5 stars.
+
+IMPORTANT:
+
+Only customers who actually booked/completed a tour
+should be allowed to submit a verified review.
+
+Review status:
+
+PENDING
+APPROVED
+REJECTED
+
+Only APPROVED reviews appear publicly.
+
+Show:
+
+★★★★★
+Customer name
+Verified Traveller
+Tour name
+Review
+Date
+
+Prevent duplicate reviews for the same completed booking
+unless business rules explicitly allow it.
+
+==================================================
+10. SPECIAL CARE / SPECIAL REQUIREMENTS
+==================================================
+
+During booking or enquiry, provide:
+
+"Do you have any special requirements?"
+
+Examples:
+
+Food preferences
+Wheelchair assistance
+Senior citizen assistance
+Child requirements
+Medical/comfort requirements
+Room preferences
+Pickup requirements
+Other
+
+Use a text area plus optional predefined selections.
+
+DO NOT expose sensitive medical information unnecessarily.
+
+Store only information needed to fulfill the travel request.
+
+Admin/staff should see special requirements only
+when necessary for trip fulfillment.
+
+==================================================
+11. CONTACT INFORMATION
+==================================================
+
+Create a professional Contact Us page.
+
+Display configured:
+
+Company name
+Phone
+Email
+WhatsApp
+Address
+Business hours
+Social media
+
+Add:
+
+Contact form
+Google Maps/location section if configured
+
+Contact form:
+
+name
+email
+phone
+subject
+message
+
+Store submissions in database.
+
+Admin should see:
+
+New Contact Messages
+Read
+Replied
+Closed
+
+Do not scatter phone numbers and email addresses
+through multiple React components.
+
+Create centralized configuration.
+
+==================================================
+12. EMAIL / PHONE
+==================================================
+
+Implement proper customer communication.
+
+Email should be used for:
+
+Registration verification where configured
+Booking confirmation
+Payment confirmation
+Booking cancellation
+Enquiry acknowledgement
+Review submission acknowledgement
+
+Phone/WhatsApp:
+
+Contact support
+Enquiry follow-up
+Travel assistance
+
+Never expose private customer information publicly.
+
+==================================================
+13. TERMS & CONDITIONS
+==================================================
+
+Create:
+
+/terms
+/privacy
+/cancellation-policy
+/refund-policy
+
+During booking, show:
+
+"I agree to the Terms & Conditions"
+
+The checkbox must be required before final booking/payment.
+
+Store the accepted policy version with the booking if possible.
+
+Example:
+
+terms_version
+accepted_at
+
+This allows the company to know which terms the customer accepted.
+
+==================================================
+14. SECURE PAYMENT
+==================================================
+
+Implement a secure payment architecture.
+
+DO NOT store:
+
+card number
+CVV
+card PIN
+UPI PIN
+bank password
+
+The frontend should NEVER decide the final booking amount.
+
+Correct flow:
+
+Customer selects trip
+        ↓
+Flask calculates price
+        ↓
+Booking created as PENDING
+        ↓
+Payment order created
+        ↓
+Customer completes payment
+        ↓
+Payment provider verifies payment
+        ↓
+Backend confirms payment
+        ↓
+Booking becomes CONFIRMED
+        ↓
+Ticket/confirmation generated
+
+Payment states:
+
+PENDING
+PROCESSING
+SUCCESS
+FAILED
+CANCELLED
+REFUNDED
+
+Keep a MOCK payment provider for development.
+
+Create a provider abstraction so Razorpay or another
+real payment provider can be connected later.
+
+==================================================
+15. BOOKING DATABASE
+==================================================
+
+Use proper relational structure.
+
+Recommended:
+
+users
+customer_profiles
+destinations
+services
+tours
+tour_images
+tour_itineraries
+departures
+bookings
+travellers
+payments
+enquiries
+feedback
+reviews
+highlights
+contact_messages
+special_requirements
+notifications
+
+Relationships must use foreign keys.
+
+Example:
+
+users
+  ↓
+customer_profiles
+  ↓
+bookings
+  ↓
+travellers
+  ↓
+payments
+
+And:
+
+destinations
+  ↓
+tours
+  ↓
+departures
+  ↓
+bookings
+
+==================================================
+16. DATABASE EASY UPDATE
+==================================================
+
+The database must be easy for administrators to update.
+
+Use:
+
+Python Flask
++
+SQLAlchemy
++
+Alembic migrations
+
+Development:
+
+SQLite
+
+Production:
+
+PostgreSQL
+
+Create proper:
+
+models
+migrations
+seed data
+repositories/services
+
+Do NOT modify database tables manually from frontend code.
+
+Admin should update data through Flask APIs.
+
+==================================================
+17. ADMIN DASHBOARD
+==================================================
+
+Create/update the admin dashboard.
+
+Admin should manage:
+
+Customers
+Tours
+Destinations
+Services
+Departures
+Bookings
+Payments
+Enquiries
+Feedback
+Reviews
+Highlights
+Contact messages
+FAQs
+Terms/Policies
+
+Dashboard statistics:
+
+Total customers
+Total bookings
+Upcoming trips
+Revenue
+Pending enquiries
+Pending reviews
+New feedback
+Payment failures
+
+==================================================
+18. CUSTOMER DASHBOARD
+==================================================
+
+Create a professional customer dashboard.
+
+Sections:
+
+Overview
+My Trips
+Upcoming Trips
+Past Trips
+Wishlist
+Enquiries
+Reviews
+Feedback
+Notifications
+Profile
+Payment History
+
+Upcoming trip should show:
+
+Destination
+Tour
+Departure date
+Travellers
+Booking number
+Booking status
+Payment status
+
+Buttons:
+
+View Details
+Download Ticket
+Contact Support
+Cancel Booking
+
+==================================================
+19. HOMEPAGE
+==================================================
+
+Enhance the existing homepage significantly.
+
+Use a premium travel-company UI.
+
+Hero:
+
+Large cinematic Indian travel photography.
+
+Headline:
+
+"Slow Travel.
+Deeper Connections."
+
+Supporting text:
+
+"Discover thoughtfully curated journeys,
+beautiful destinations and experiences that stay with you."
+
+Buttons:
+
+Explore Journeys
+Plan My Trip
+
+Below hero:
+
+Smart trip search
+
+Destination
+Travel date
+Travellers
+Experience
+
+[Plan Journey →]
+
+Then:
+
+Recent Highlights
+Popular Destinations
+Featured Trips
+Our Services
+Upcoming Departures
+Why Travel With Us
+Traveller Reviews
+Custom Trip
+Travel Journal
+FAQ
+Final CTA
+
+==================================================
+20. UI DESIGN
+==================================================
+
+Use React + Tailwind.
+
+Theme:
+
+Minimal Indian Luxury.
+
+Colors:
+
+Ivory:
+#F7F1E7
+
+Charcoal:
+#1D1B18
+
+Champagne:
+#B99762
+
+Olive:
+#6D725C
+
+White:
+#FFFFFF
+
+Use elegant serif headings and modern sans-serif body text.
+
+Do not use excessive:
+
+cards
+pills
+gradients
+shadows
+animations
+
+Use:
+
+large photography
+editorial layouts
+thin borders
+whitespace
+subtle hover effects
+asymmetric grids
+
+==================================================
+21. RESPONSIVENESS
+==================================================
+
+Support:
+
+mobile
+tablet
+desktop
+large screens
+
+Mobile navigation:
+
+Logo
+Search
+Wishlist
+Menu
+
+Mobile menu should be a proper drawer.
+
+Forms should be easy to use on mobile.
+
+==================================================
+22. SECURITY
+==================================================
+
+Implement:
+
+password hashing
+JWT/session security
+role-based access
+input validation
+rate limiting
+CORS restrictions
+secure headers
+SQL injection protection
+server-side authorization
+server-side pricing
+payment verification
+
+Never trust frontend values.
+
+==================================================
+23. API STRUCTURE
+==================================================
+
+Use Flask REST APIs.
+
+Examples:
+
+GET /api/destinations
+GET /api/destinations/:slug
+
+GET /api/services
+GET /api/highlights
+
+GET /api/tours
+GET /api/tours/:slug
+
+GET /api/departures
+
+POST /api/enquiries
+GET /api/customer/enquiries
+
+POST /api/feedback
+
+POST /api/reviews
+GET /api/reviews
+
+POST /api/contact
+
+POST /api/bookings
+
+POST /api/payments/create
+POST /api/payments/verify
+
+GET /api/customer/bookings
+
+Admin:
+
+/api/admin/destinations
+/api/admin/services
+/api/admin/highlights
+/api/admin/enquiries
+/api/admin/feedback
+/api/admin/reviews
+/api/admin/bookings
+/api/admin/payments
+
+Protect admin APIs with backend authorization.
+
+==================================================
+24. IMPORTANT DATABASE RULE
+==================================================
+
+Use generated IDs.
+
+Example:
+
+customer_id
+UUID or integer
+
+Do NOT:
+
+PRIMARY KEY(email)
+
+Do NOT:
+
+PRIMARY KEY(phone)
+
+Instead:
+
+customer_id PRIMARY KEY
+email UNIQUE
+phone UNIQUE
+
+This provides flexibility if a customer's email or phone changes.
+
+==================================================
+25. FINAL USER EXPERIENCE
+==================================================
+
+A tourist should be able to:
+
+1. Open homepage
+2. Explore destinations
+3. See recent highlights
+4. Browse services
+5. View trip details
+6. Check available dates
+7. Send an enquiry
+8. Specify special requirements
+9. Register/login
+10. Book a trip
+11. Accept terms
+12. Pay securely
+13. Receive confirmation
+14. View booking
+15. Download ticket
+16. Give feedback
+17. Submit a verified review
+
+==================================================
+26. IMPLEMENTATION RULE
+==================================================
+
+First inspect the existing project.
+
+Then:
+
+1. Identify existing functionality.
+2. Reuse working components.
+3. Remove duplicate implementations.
+4. Add missing database models.
+5. Add Flask APIs.
+6. Connect React UI.
+7. Implement validation.
+8. Implement security.
+9. Test complete tourist workflow.
+10. Update documentation.
+
+Do NOT simply create static UI.
+
+Every important form should connect to the Flask backend
+and database.
+
+Do NOT use fake success messages.
+
+When a user submits:
+
+Review
+Feedback
+Enquiry
+Contact form
+Booking
+Payment
+
+the system must actually process/store the information.
+
+Finally provide:
+
+- files modified
+- files created
+- database changes
+- API changes
+- frontend changes
+- security changes
+- how to run
+- testing results
+- remaining limitations
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-09-21T15:53:17+05:30.
+
+The user's current state is as follows:
+Active Document: c:\Users\HP\OneDrive\Desktop\Travel-Agency-main\run.bat (LANGUAGE_UNSPECIFIED)
+Cursor is on line: 54
+Other open documents:
+- c:\Users\HP\OneDrive\Desktop\Travel-Agency-main\frontend\src\components\tours\TourCard.jsx (LANGUAGE_UNSPECIFIED)
+- c:\Users\HP\OneDrive\Desktop\Travel-Agency-main\server\src\routes\adminRoutes.js (LANGUAGE_UNSPECIFIED)
+- c:\Users\HP\OneDrive\Desktop\Travel-Agency-main\server\src\routes\authRoutes.js (LANGUAGE_UNSPECIFIED)
+- c:\Users\HP\OneDrive\Desktop\Travel-Agency-main\server\src\routes\bookingRoutes.js (LANGUAGE_UNSPECIFIED)
+- c:\Users\HP\OneDrive\Desktop\Travel-Agency-main\server\src\server.js (LANGUAGE_UNSPECIFIED)
+</ADDITIONAL_METADATA>

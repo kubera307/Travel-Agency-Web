@@ -9,7 +9,7 @@ export const enquiryService = {
     return await api.post('/enquiries', {
       name: 'Newsletter Subscriber',
       email: email,
-      message: 'Subscribed to NammaYathra newsletter & seasonal journals'
+      message: 'Subscribed to NammaYatra newsletter & seasonal journals'
     });
   }
 };

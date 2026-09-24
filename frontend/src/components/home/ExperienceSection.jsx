@@ -7,55 +7,55 @@ const EXPERIENCES = [
     title: 'Private Heritage Stays',
     desc: 'Waking up in 17th-century havelis, restored palaces, and aristocratic tea bungalows.',
     category: 'heritage',
-    image: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=800&q=80'
+    image: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=2400&q=90'
   },
   {
     title: 'Village Encounters',
     desc: 'Unmediated interactions with weavers, potters, and organic farmers in pastoral India.',
     category: 'culture',
-    image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=800&q=80'
+    image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=2400&q=90'
   },
   {
     title: 'Wildlife Safaris',
     desc: 'Tracking Royal Bengal tigers and Asiatic elephants alongside naturalists.',
     category: 'wildlife',
-    image: 'https://images.unsplash.com/photo-1575550959106-5a7defe28b56?auto=format&fit=crop&w=800&q=80'
+    image: 'https://images.unsplash.com/photo-1575550959106-5a7defe28b56?auto=format&fit=crop&w=2400&q=90'
   },
   {
     title: 'Culinary Journeys',
     desc: 'Mastering generational Awadhi, Malabar, and Kashmiri wazwan ancestral recipes.',
     category: 'culinary',
-    image: 'https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?auto=format&fit=crop&w=800&q=80'
+    image: 'https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?auto=format&fit=crop&w=2400&q=90'
   },
   {
     title: 'Wellness Retreats',
     desc: 'Classical Ayurvedic therapies, silent pranayama, and Himalayan herb sanctuaries.',
     category: 'wellness',
-    image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=800&q=80'
+    image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=2400&q=90'
   },
   {
     title: 'Spiritual Journeys',
     desc: 'Dawn boat chants at Assi Ghat, ancient monastery pujas, and sacred temple trails.',
     category: 'spiritual',
-    image: 'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=800&q=80'
+    image: 'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=2400&q=90'
   },
   {
     title: 'Himalayan Escapes',
     desc: 'Silent cedar ridges, high-altitude alpine lakes, and stargazing in Spiti Valley.',
     category: 'adventure',
-    image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80'
+    image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2400&q=90'
   },
   {
     title: 'Backwater Retreats',
     desc: 'Teakwood solar houseboats drifting through silent lagoons and coconut estuaries.',
     category: 'relaxation',
-    image: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=800&q=80'
+    image: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=2400&q=90'
   }
 ];
 
 export default function ExperienceSection() {
   return (
-    <section className="py-20 sm:py-28 bg-[#EFE4D2]/30 border-t border-[#EFE4D2]">
+    <section id="experiences" className="py-20 sm:py-28 bg-[#EFE4D2]/30 border-t border-[#EFE4D2]">
       <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
         {/* Editorial Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 sm:mb-16 text-left">
@@ -67,9 +67,18 @@ export default function ExperienceSection() {
               Travel Beyond Sightseeing
             </h2>
           </div>
-          <p className="mt-4 sm:mt-0 font-sans text-xs text-[#6D6A61] max-w-xs font-light">
-            Every itinerary is woven around personal passions rather than generic tourist trails.
-          </p>
+          <div className="mt-4 sm:mt-0 flex flex-col sm:items-end gap-1.5">
+            <p className="font-sans text-xs text-[#6D6A61] max-w-xs font-light">
+              Every itinerary is woven around personal passions rather than generic tourist trails.
+            </p>
+            <Link
+              to="/experiences"
+              className="text-xs uppercase tracking-widest font-semibold text-[#B99762] hover:text-[#1D1B18] transition inline-flex items-center gap-1 mt-1"
+            >
+              <span>Explore All Experiences Anthology</span>
+              <ArrowUpRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
         </div>
 
         {/* 8 Curated Experience Cards */}

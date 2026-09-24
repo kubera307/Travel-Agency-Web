@@ -23,7 +23,7 @@ export default function EditorialIntro() {
             </p>
 
             <p className="editorial-body">
-              At NAMMAYATHRA, we curate intimate sanctuaries: restored 300-year-old desert havelis, fragrant spice-plantation estates, and secluded Himalayan retreats. Each itinerary honors your personal rhythm, guided by regional historians and culinary custodians who call these lands home.
+              At NammaYatra, we curate intimate sanctuaries: restored 300-year-old desert havelis, fragrant spice-plantation estates, and secluded Himalayan retreats. Each itinerary honors your personal rhythm, guided by regional historians and culinary custodians who call these lands home.
             </p>
 
             <div className="pt-4">
@@ -55,7 +55,7 @@ export default function EditorialIntro() {
                   "To travel slowly is to allow the soul to catch up with the eyes."
                 </p>
                 <span className="block mt-2 text-[9px] uppercase tracking-[0.2em] text-[#B99762]">
-                  NAMMAYATHRA Philosophy
+                  NammaYatra Philosophy
                 </span>
               </div>
             </div>

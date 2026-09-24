@@ -16,6 +16,8 @@ from routes.review_routes import review_bp
 from routes.favourite_routes import favourite_bp
 from routes.enquiry_routes import enquiry_bp
 from routes.admin_routes import admin_bp
+from routes.razorpay_routes import razorpay_bp
+from routes.feedback_routes import feedback_bp
 
 def create_app():
     app = Flask(__name__, static_folder=str(Config.CLIENT_DIST))
@@ -39,10 +41,12 @@ def create_app():
     app.register_blueprint(tour_bp)
     app.register_blueprint(booking_bp)
     app.register_blueprint(payment_bp)
+    app.register_blueprint(razorpay_bp)
     app.register_blueprint(review_bp)
     app.register_blueprint(favourite_bp)
     app.register_blueprint(enquiry_bp)
     app.register_blueprint(admin_bp)
+    app.register_blueprint(feedback_bp)
 
     # Health Check API
     @app.route('/api/health', methods=['GET'])
@@ -56,7 +60,7 @@ def create_app():
         return jsonify({
             'status': 'OK',
             'server': 'Flask / Python 3.12',
-            'platform': 'Travel India Open Mobility Platform',
+            'platform': 'NammaYatra Tour & Experiences Platform',
             'database': 'healthy' if db_ok else 'unhealthy'
         })
 

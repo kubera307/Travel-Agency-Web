@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { useCurrency } from '../../context/CurrencyContext';
 import BookingTicketPass from './BookingTicketPass';
+import SecurePaymentCheckout from './SecurePaymentCheckout';
 import {
   Calendar,
   Users,
@@ -17,7 +18,9 @@ import {
   ShieldCheck,
   MessageCircle,
   Clock,
-  Sparkles
+  Sparkles,
+  Lock,
+  CreditCard
 } from 'lucide-react';
 
 export default function BookingWizard() {
@@ -35,7 +38,11 @@ export default function BookingWizard() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
-  // Simplified Form State (Everything on 1 Simple Screen)
+  // 3-Step Wizard Navigation
+  // 1 = Traveller Details, 2 = Secure Online Payment, 3 = Confirmed Boarding Pass
+  const [currentStep, setCurrentStep] = useState(1);
+
+  // Form State
   const [departureDate, setDepartureDate] = useState('');
   const [travellerCount, setTravellerCount] = useState(2);
   const [fullName, setFullName] = useState(user?.name || '');
@@ -44,7 +51,9 @@ export default function BookingWizard() {
   const [pickupPoint, setPickupPoint] = useState('');
   const [specialNotes, setSpecialNotes] = useState('');
 
-  // Confirmed booking state
+  // Payment & Confirmation State
+  const [pendingBooking, setPendingBooking] = useState(null);
+  const [paymentOrder, setPaymentOrder] = useState(null);
   const [confirmedBooking, setConfirmedBooking] = useState(null);
   const [ticketData, setTicketData] = useState(null);
 
@@ -70,7 +79,6 @@ export default function BookingWizard() {
               : t.departures[0];
             setDepartureDate(matched ? matched.departure_date : t.departures[0].departure_date);
           } else {
-            // Default to 3 days from now
             const d = new Date();
             d.setDate(d.getDate() + 3);
             setDepartureDate(d.toISOString().split('T')[0]);
@@ -105,13 +113,13 @@ export default function BookingWizard() {
   // Price calculations
   const pricePerGuest = tour ? Number(tour.sale_price || 0) : 0;
   const subtotal = pricePerGuest * travellerCount;
-  const grandTotal = subtotal; // Zero extra fees, 100% direct
+  const grandTotal = subtotal; // Zero platform commission
 
   // 1-Click WhatsApp Booking
   const handleWhatsAppBooking = () => {
     if (!tour) return;
     const agencyNumber = '919876543210';
-    const message = `*Hi NammaYathra!* I would like to book a tour:
+    const message = `*Hi NammaYatra!* I would like to book a tour:
 - *Tour:* ${tour.title}
 - *Date:* ${departureDate || 'Flexible'}
 - *Guests:* ${travellerCount}
@@ -125,7 +133,7 @@ Please confirm seat availability. Thank you!`;
     window.open(`https://wa.me/${agencyNumber}?text=${encoded}`, '_blank');
   };
 
-  // Direct 1-Step Booking Submission
+  // Step 1: Submit Booking Reservation -> Proceeds to Online Payment
   const handleSubmitBooking = async (e) => {
     e.preventDefault();
 
@@ -157,62 +165,104 @@ Please confirm seat availability. Thank you!`;
         ]
       };
 
-      // If user is not logged in, we can either use token if present or create an auto guest account
-      const headers = { 'Content-Type': 'application/json' };
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-      }
+      const res = await api.post('/bookings', bookingPayload);
 
-      const res = await fetch('/api/bookings', {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(bookingPayload)
-      });
-
-      const data = await res.json();
-
-      if (data.success) {
-        addToast('🎉 Booking confirmed! Your boarding pass is ready.', 'success');
-        setConfirmedBooking(data.booking);
-        setTicketData(data.ticket);
+      if (res.success) {
+        addToast('Seats locked for 15 minutes! Please select your payment method.', 'success');
+        setPendingBooking(res.booking);
+        setPaymentOrder(res.paymentOrder);
+        setCurrentStep(2);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
-        // If auth required, prompt or auto login
-        if (res.status === 401) {
-          addToast('Please login or register to finalize your booking pass', 'info');
-          navigate(`/login?redirect=/booking?tour=${tour.slug}`);
-        } else {
-          addToast(data.message || 'Failed to confirm booking', 'error');
-        }
+        addToast(res.message || 'Failed to initiate booking reservation', 'error');
       }
     } catch (err) {
-      addToast(err.message || 'Error processing booking', 'error');
+      addToast(err.message || 'Error processing reservation', 'error');
     } finally {
       setSubmitting(false);
     }
   };
 
+  // Step 2: Payment Verified Callback -> Proceeds to Boarding Pass
+  const handlePaymentSuccess = (paymentResult) => {
+    setConfirmedBooking(paymentResult.booking);
+    setTicketData(paymentResult.ticket);
+    setCurrentStep(3);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Step Indicator
+  const renderStepIndicator = () => (
+    <div className="mb-8">
+      <div className="flex items-center justify-between max-w-xl mx-auto relative">
+        <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-[#EAE3D9] -translate-y-1/2 z-0" />
+        
+        {/* Step 1 */}
+        <div className="relative z-10 flex flex-col items-center">
+          <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs transition-all ${
+            currentStep >= 1 ? 'bg-[#0E131F] text-amber-400 ring-4 ring-amber-100' : 'bg-slate-200 text-slate-500'
+          }`}>
+            {currentStep > 1 ? '✓' : '1'}
+          </div>
+          <span className="text-[11px] font-semibold text-slate-700 mt-1.5">
+            Trip Details
+          </span>
+        </div>
+
+        {/* Step 2 */}
+        <div className="relative z-10 flex flex-col items-center">
+          <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs transition-all ${
+            currentStep === 2
+              ? 'bg-[#B68D40] text-white ring-4 ring-amber-200'
+              : currentStep > 2
+              ? 'bg-[#0E131F] text-amber-400 ring-4 ring-amber-100'
+              : 'bg-slate-200 text-slate-500'
+          }`}>
+            {currentStep > 2 ? '✓' : '2'}
+          </div>
+          <span className={`text-[11px] font-semibold mt-1.5 ${currentStep === 2 ? 'text-[#B68D40] font-bold' : 'text-slate-500'}`}>
+            Secure Payment
+          </span>
+        </div>
+
+        {/* Step 3 */}
+        <div className="relative z-10 flex flex-col items-center">
+          <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs transition-all ${
+            currentStep === 3 ? 'bg-emerald-600 text-white ring-4 ring-emerald-100' : 'bg-slate-200 text-slate-500'
+          }`}>
+            3
+          </div>
+          <span className={`text-[11px] font-semibold mt-1.5 ${currentStep === 3 ? 'text-emerald-700 font-bold' : 'text-slate-500'}`}>
+            Boarding Pass
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+
   if (loading) {
     return (
-      <div className="max-w-4xl mx-auto py-20 px-4 text-center">
-        <div className="w-10 h-10 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-        <p className="text-slate-600 font-semibold text-sm">Preparing booking form...</p>
+      <div className="max-w-4xl mx-auto py-24 px-4 text-center">
+        <div className="w-10 h-10 border-3 border-[#B68D40] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+        <p className="text-slate-600 font-medium text-xs">Preparing verified booking experience...</p>
       </div>
     );
   }
 
-  // If booking is confirmed, show boarding pass
-  if (confirmedBooking && ticketData) {
+  // STEP 3: Confirmed Boarding Pass
+  if (currentStep === 3 && confirmedBooking && ticketData) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-10 space-y-6">
+        {renderStepIndicator()}
         <div className="text-center space-y-2">
-          <div className="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto">
+          <div className="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto shadow-xs">
             <CheckCircle2 className="w-8 h-8" />
           </div>
-          <h1 className="font-display font-black text-2xl sm:text-3xl text-slate-900">
-            Booking Confirmed!
+          <h1 className="font-serif font-normal text-3xl sm:text-4xl text-slate-900">
+            Payment Verified &amp; Booking Confirmed!
           </h1>
-          <p className="text-xs text-slate-500 max-w-md mx-auto">
-            Your journey with verified Sarathis is locked in. Here is your printable boarding pass.
+          <p className="text-xs text-slate-500 max-w-md mx-auto font-light">
+            Your expedition with verified Sarathis is locked in. Below is your official boarding pass and tax receipt.
           </p>
         </div>
 
@@ -221,66 +271,88 @@ Please confirm seat availability. Thank you!`;
         <div className="flex justify-center gap-4 pt-4">
           <Link
             to="/customer/bookings"
-            className="px-6 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs rounded-xl shadow-md transition-all"
+            className="px-6 py-2.5 bg-[#0E131F] hover:bg-black text-white font-semibold text-xs rounded-xl shadow-xs transition-all flex items-center gap-2"
           >
-            Go to My Bookings
+            <span>Go to My Bookings</span>
+            <ArrowRight className="w-3.5 h-3.5 text-amber-400" />
           </Link>
           <Link
             to="/tours"
-            className="px-6 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-all"
+            className="px-6 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl transition-all"
           >
-            Explore More Tours
+            Explore More Expeditions
           </Link>
         </div>
       </div>
     );
   }
 
+  // STEP 2: Secure Online Payment Checkout
+  if (currentStep === 2 && pendingBooking && paymentOrder) {
+    return (
+      <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
+        {renderStepIndicator()}
+        <SecurePaymentCheckout
+          booking={pendingBooking}
+          paymentOrder={paymentOrder}
+          onPaymentSuccess={handlePaymentSuccess}
+          onBack={() => setCurrentStep(1)}
+        />
+      </div>
+    );
+  }
+
+  // STEP 1: Details & Reservation Form
   return (
-    <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
+      {renderStepIndicator()}
+
       {/* Header */}
-      <div className="mb-8">
-        <span className="eyebrow">
-          Quick &amp; Simple Booking
-        </span>
-        <h1 className="font-display mt-2 text-3xl font-black tracking-[-0.06em] text-[#102039] sm:text-4xl">
-          Reserve Your Tour in 1 Easy Step
+      <div className="mb-7 text-left">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-[#B68D40] text-[10px] font-bold tracking-[0.2em] uppercase mb-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#B68D40]"></span>
+          <span>DIRECT SARATHI RESERVATION</span>
+          <span className="text-slate-400">•</span>
+          <span className="text-slate-600 font-medium">STEP 1 OF 2</span>
+        </div>
+        <h1 className="font-serif text-3xl sm:text-4xl text-slate-900 font-normal">
+          Reserve Your Tour Itinerary
         </h1>
-        <p className="text-xs text-slate-500 mt-0.5">
-          No complex multi-step forms. Fill in your details or book instantly via WhatsApp!
+        <p className="text-xs text-slate-500 font-light mt-0.5">
+          Lock in your seats with real-time driver telemetry. Zero platform commission guarantee.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start text-left">
         {/* Left Column: Form */}
-        <div className="space-y-6 rounded-[26px] border border-[#e8dfd5] bg-[#fffdf9] p-6 shadow-[0_16px_34px_rgba(15,23,42,0.05)] sm:p-8 lg:col-span-2">
+        <div className="space-y-6 rounded-3xl border border-[#EAE3D9] bg-white p-6 sm:p-8 shadow-xs lg:col-span-2">
           <form onSubmit={handleSubmitBooking} className="space-y-6">
             {/* 1. Date & Guests */}
             <div>
-              <h3 className="font-bold text-sm text-slate-900 mb-3 flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-orange-500" />
+              <h3 className="font-serif text-base font-normal text-slate-900 mb-3 flex items-center gap-2">
+                <Calendar className="w-4 h-4 text-[#B68D40]" />
                 <span>1. Select Travel Date &amp; Number of Guests</span>
               </h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-xs font-bold text-slate-700 block mb-1">Travel Date</label>
+                  <label className="text-xs font-semibold text-slate-700 block mb-1">Travel Date *</label>
                   <input
                     type="date"
                     required
                     min={new Date().toISOString().split('T')[0]}
                     value={departureDate}
                     onChange={(e) => setDepartureDate(e.target.value)}
-                    className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-orange-500/20 font-semibold"
+                    className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#B68D40]/30 font-medium"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-slate-700 block mb-1">Number of Guests</label>
+                  <label className="text-xs font-semibold text-slate-700 block mb-1">Number of Guests *</label>
                   <select
                     value={travellerCount}
                     onChange={(e) => setTravellerCount(Number(e.target.value))}
-                    className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-orange-500/20 font-semibold"
+                    className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#B68D40]/30 font-medium"
                   >
                     {[1, 2, 3, 4, 5, 6, 7, 8, 10, 12].map((num) => (
                       <option key={num} value={num}>
@@ -293,85 +365,86 @@ Please confirm seat availability. Thank you!`;
             </div>
 
             {/* 2. Contact Details */}
-            <div className="pt-4 border-t border-slate-100">
-              <h3 className="font-bold text-sm text-slate-900 mb-3 flex items-center gap-2">
-                <User className="w-4 h-4 text-orange-500" />
-                <span>2. Your Contact Details</span>
+            <div className="pt-5 border-t border-slate-100">
+              <h3 className="font-serif text-base font-normal text-slate-900 mb-3 flex items-center gap-2">
+                <User className="w-4 h-4 text-[#B68D40]" />
+                <span>2. Lead Traveller Contact Details</span>
               </h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-xs font-bold text-slate-700 block mb-1">Full Name *</label>
+                  <label className="text-xs font-semibold text-slate-700 block mb-1">Full Name *</label>
                   <input
                     type="text"
                     required
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     placeholder="e.g. Ramesh Kumar"
-                    className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-orange-500/20 font-medium"
+                    className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#B68D40]/30 font-medium"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-slate-700 block mb-1">Phone Number (WhatsApp) *</label>
+                  <label className="text-xs font-semibold text-slate-700 block mb-1">Phone Number (WhatsApp) *</label>
                   <input
                     type="tel"
                     required
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="+91 98765 43210"
-                    className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-orange-500/20 font-medium"
+                    className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#B68D40]/30 font-medium"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-slate-700 block mb-1">Email Address (Optional)</label>
+                  <label className="text-xs font-semibold text-slate-700 block mb-1">Email Address</label>
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="name@example.com"
-                    className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-orange-500/20 font-medium"
+                    className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#B68D40]/30 font-medium"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-slate-700 block mb-1">Pickup Point / Hotel</label>
+                  <label className="text-xs font-semibold text-slate-700 block mb-1">Pickup Point / Hotel</label>
                   <input
                     type="text"
                     value={pickupPoint}
                     onChange={(e) => setPickupPoint(e.target.value)}
-                    placeholder="e.g. Airport / Hotel Lobby"
-                    className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-orange-500/20 font-medium"
+                    placeholder="e.g. Airport, Hotel Lobby"
+                    className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#B68D40]/30 font-medium"
                   />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="text-xs font-bold text-slate-700 block mb-1">Special Requests (Optional)</label>
+                <label className="text-xs font-semibold text-slate-700 block mb-1">Special Preferences (Optional)</label>
                 <textarea
                   rows={2}
                   value={specialNotes}
                   onChange={(e) => setSpecialNotes(e.target.value)}
-                  placeholder="Need baby seat, vegetarian food preference, or early morning start..."
-                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-orange-500/20 resize-none font-medium"
+                  placeholder="Need child safety seat, pure vegetarian meals, early morning departure..."
+                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#B68D40]/30 resize-none font-medium"
                 ></textarea>
               </div>
             </div>
 
-            {/* Action Buttons: Instant WhatsApp + Confirm */}
-            <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row gap-3">
+            {/* Action Buttons: Proceed to Payment + WhatsApp */}
+            <div className="pt-5 border-t border-slate-100 flex flex-col sm:flex-row gap-3">
               <button
                 type="submit"
                 disabled={submitting}
-                className="flex-1 py-3.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                className="flex-1 py-3.5 bg-[#0E131F] hover:bg-black text-white font-semibold text-xs rounded-xl shadow-xs transition-all flex items-center justify-center gap-2 group disabled:opacity-50"
               >
                 {submitting ? (
-                  <span>Confirming...</span>
+                  <span>Reserving Seats...</span>
                 ) : (
                   <>
-                    <span>Confirm Booking &amp; Get Pass</span>
-                    <ArrowRight className="w-4 h-4" />
+                    <Lock className="w-4 h-4 text-[#B68D40]" />
+                    <span>Proceed to Secure Online Payment ({formatPrice(grandTotal)})</span>
+                    <ArrowRight className="w-4 h-4 text-[#B68D40] group-hover:translate-x-1 transition-transform" />
                   </>
                 )}
               </button>
@@ -379,7 +452,7 @@ Please confirm seat availability. Thank you!`;
               <button
                 type="button"
                 onClick={handleWhatsAppBooking}
-                className="py-3.5 px-6 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2"
+                className="py-3.5 px-5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded-xl shadow-xs transition-all flex items-center justify-center gap-2"
               >
                 <MessageCircle className="w-4 h-4" />
                 <span>Book via WhatsApp</span>
@@ -390,8 +463,7 @@ Please confirm seat availability. Thank you!`;
 
         {/* Right Column: Tour Summary & Trust Strip */}
         <div className="space-y-4">
-          {/* Summary Card */}
-          <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+          <div className="bg-white rounded-3xl p-6 border border-[#EAE3D9] shadow-xs space-y-4">
             <div className="aspect-[16/10] rounded-2xl overflow-hidden bg-slate-100">
               <img
                 src={tour?.primary_image || tour?.image || 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=400&q=80'}
@@ -401,13 +473,13 @@ Please confirm seat availability. Thank you!`;
             </div>
 
             <div>
-              <span className="text-[10px] font-bold text-orange-600 uppercase tracking-wider">
+              <span className="text-[10px] font-bold text-[#B68D40] uppercase tracking-wider">
                 {tour?.destination_name || tour?.departure_city}
               </span>
-              <h3 className="font-display font-bold text-base text-slate-900 mt-0.5">
+              <h3 className="font-serif font-normal text-base text-slate-900 mt-0.5 leading-snug">
                 {tour?.title}
               </h3>
-              <p className="text-xs text-slate-500 mt-1 flex items-center gap-1">
+              <p className="text-xs text-slate-500 mt-1 flex items-center gap-1 font-light">
                 <Clock className="w-3.5 h-3.5 text-slate-400" />
                 <span>{tour?.duration_days} Days / {tour?.duration_nights} Nights</span>
               </p>
@@ -423,37 +495,40 @@ Please confirm seat availability. Thank you!`;
                 <span>Number of Guests</span>
                 <span className="font-semibold">× {travellerCount}</span>
               </div>
-              <div className="pt-2 border-t border-slate-100 flex justify-between text-sm font-bold text-slate-900">
-                <span>Total Amount</span>
-                <span className="text-orange-600 font-display font-black text-lg">
+              <div className="pt-3 border-t border-slate-100 flex justify-between items-baseline">
+                <div>
+                  <span className="font-serif text-sm font-bold text-slate-900">Total Payable</span>
+                  <p className="text-[10px] text-emerald-600 font-medium">● 100% Direct Driver Share</p>
+                </div>
+                <span className="text-[#0E131F] font-serif font-bold text-xl">
                   {formatPrice(grandTotal)}
                 </span>
               </div>
             </div>
 
             <div className="pt-3 border-t border-slate-100 space-y-2 text-[11px] text-slate-500">
-              <div className="flex items-center gap-2 text-emerald-700 font-semibold">
-                <ShieldCheck className="w-4 h-4 text-emerald-600" />
+              <div className="flex items-center gap-2 text-emerald-800 font-medium">
+                <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
                 <span>100% Direct to Sarathi Driver (0% Commission)</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-orange-500" />
+                <CheckCircle2 className="w-4 h-4 text-[#B68D40] shrink-0" />
                 <span>Free Cancellation up to 24h before departure</span>
               </div>
             </div>
           </div>
 
           {/* Direct Support Card */}
-          <div className="bg-amber-50 rounded-2xl p-5 border border-amber-200/80 text-amber-950 space-y-2 text-xs">
-            <p className="font-bold flex items-center gap-1.5">
-              <Phone className="w-4 h-4 text-amber-600" />
-              <span>Have Questions Before Booking?</span>
+          <div className="bg-[#FAF8F5] rounded-2xl p-5 border border-[#EAE3D9] text-slate-800 space-y-2 text-xs">
+            <p className="font-semibold flex items-center gap-1.5 text-slate-900">
+              <Phone className="w-4 h-4 text-[#B68D40]" />
+              <span>Questions Before Payment?</span>
             </p>
-            <p className="text-slate-600 text-[11px] leading-relaxed">
-              Our travel coordinator is directly available on WhatsApp and Phone:
+            <p className="text-slate-500 text-[11px] font-light leading-relaxed">
+              Our travel coordinator is directly available for booking queries and assistance:
             </p>
-            <div className="pt-1 flex flex-col gap-1 font-bold text-slate-800">
-              <a href="tel:1800-BHARAT" className="hover:text-orange-600 flex items-center gap-1">
+            <div className="pt-1 flex flex-col gap-1 font-semibold text-slate-800 text-[11px]">
+              <a href="tel:1800-BHARAT" className="hover:text-[#B68D40] flex items-center gap-1">
                 📞 Toll-Free: 1800-BHARAT
               </a>
               <a

@@ -1,7 +1,7 @@
 import time
 from flask import Blueprint, request, jsonify, g
 from database.db import query_all, execute
-from middleware.auth import optional_jwt, admin_required
+from middleware.auth import optional_jwt, jwt_required, admin_required
 
 enquiry_bp = Blueprint('enquiries', __name__, url_prefix='/api/enquiries')
 
@@ -43,6 +43,7 @@ def create_enquiry():
     }), 201
 
 @enquiry_bp.route('', methods=['GET'])
+@jwt_required
 @admin_required
 def get_enquiries():
     enquiries = query_all("SELECT * FROM enquiries ORDER BY created_at DESC")

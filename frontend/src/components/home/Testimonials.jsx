@@ -22,7 +22,7 @@ const REVIEWS = [
     traveledDate: 'November 2025',
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
     quote:
-      'Traveling through India for the first time could have been overwhelming, but NammaYathra made it seamless. Our chauffeur was punctual, courtly, and took us to secret chai spots no tourist book mentions.'
+      'Traveling through India for the first time could have been overwhelming, but NammaYatra made it seamless. Our chauffeur was punctual, courtly, and took us to secret chai spots no tourist book mentions.'
   },
   {
     id: 3,

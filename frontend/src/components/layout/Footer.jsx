@@ -98,7 +98,7 @@ export default function Footer() {
 
         {/* Bottom Rights */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <p>© {new Date().getFullYear()} NammaYathra. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} NammaYatra. All rights reserved.</p>
           <div className="flex items-center gap-6">
             <span>Verified Chauffeur Network</span>
             <span>100% Direct Driver Pricing</span>

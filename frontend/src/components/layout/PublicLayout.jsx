@@ -24,11 +24,11 @@ export default function PublicLayout() {
           <span>Concierge Desk</span>
         </div>
         <a
-          href="https://wa.me/919876543210?text=Hi%20Trekora!%20I%20would%20like%20assistance%20planning%20my%20journey."
+          href="https://wa.me/919876543210?text=Hi%20NammaYatra!%20I%20would%20like%20assistance%20planning%20my%20journey."
           target="_blank"
           rel="noopener noreferrer"
           className="w-12 h-12 bg-[#131417] hover:bg-[#B68D40] text-white border border-[#B68D40]/40 shadow-xl flex items-center justify-center transition-all duration-300 hover:scale-105 active:scale-95 rounded-full"
-          title="Chat with a Trekora Travel Designer"
+          title="Chat with a NammaYatra Travel Designer"
         >
           <MessageCircle className="w-5 h-5 text-[#B68D40] group-hover:text-white transition-colors" />
         </a>

@@ -7,50 +7,50 @@ import TourCard from '../../components/tours/TourCard';
 const FALLBACK_TOURS = [
   {
     id: 1,
-    title: 'Kashmir: Valleys & Alpine Tarns',
+    title: 'Kashmir: Valleys, Alpine Tarns & Houseboat Stillness',
     slug: 'kashmir-great-escape',
     destination_name: 'Kashmir',
     price: 42999,
     duration_days: 6,
     duration_nights: 5,
     rating: 4.9,
-    image_url: 'https://images.unsplash.com/photo-1595815771614-ade9d652a65d?auto=format&fit=crop&w=900&q=80',
+    image_url: 'https://images.unsplash.com/photo-1595815771614-ade9d652a65d?auto=format&fit=crop&w=2400&q=90',
     category: 'Himalayan'
   },
   {
     id: 2,
-    title: 'Kerala: Backwaters, Spice & Stillness',
+    title: 'Kerala: Backwaters, Spice Hills & Vembanad Cruise',
     slug: 'kerala-slow-journey',
     destination_name: 'Kerala',
     price: 36999,
     duration_days: 6,
     duration_nights: 5,
     rating: 4.8,
-    image_url: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=900&q=80',
+    image_url: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=2400&q=90',
     category: 'Backwaters'
   },
   {
     id: 3,
-    title: 'Rajasthan: Palaces, Stories & Desert Nights',
+    title: 'Rajasthan: Living Palaces & Thar Stargazing Camp',
     slug: 'rajasthan-royal-trail',
     destination_name: 'Rajasthan',
     price: 49999,
     duration_days: 7,
     duration_nights: 6,
     rating: 4.9,
-    image_url: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=900&q=80',
+    image_url: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=2400&q=90',
     category: 'Heritage'
   },
   {
     id: 4,
-    title: 'Goa: Portuguese Mansions & Quiet Coves',
+    title: 'Goa: Portuguese Latin Mansions & Secluded Coves',
     slug: 'goa-heritage-stays',
     destination_name: 'Goa',
     price: 28999,
     duration_days: 4,
     duration_nights: 3,
     rating: 4.7,
-    image_url: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=900&q=80',
+    image_url: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=2400&q=90',
     category: 'Coastal'
   },
   {
@@ -62,20 +62,44 @@ const FALLBACK_TOURS = [
     duration_days: 7,
     duration_nights: 6,
     rating: 4.8,
-    image_url: 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=900&q=80',
+    image_url: 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=2400&q=90',
     category: 'Mountain'
   },
   {
     id: 6,
-    title: 'Karnataka: Stone Ruins & Coffee Sanctuaries',
+    title: 'Coastal Karnataka: Kapu Lighthouse & Coffee Estates',
     slug: 'karnataka-culture-wild',
     destination_name: 'Karnataka',
     price: 34999,
     duration_days: 5,
     duration_nights: 4,
-    rating: 4.6,
-    image_url: 'https://images.unsplash.com/photo-1593693411515-c20261bcad6e?auto=format&fit=crop&w=900&q=80',
+    rating: 4.9,
+    image_url: '/hero-lighthouse.jpg',
     category: 'Wilderness'
+  },
+  {
+    id: 7,
+    title: 'Ladakh: Pangong Tso Azure Lake & Khardung La Pass',
+    slug: 'leh-ladakh-pangong-lake-nubra-valley-khardung-la',
+    destination_name: 'Ladakh',
+    price: 38999,
+    duration_days: 7,
+    duration_nights: 6,
+    rating: 5.0,
+    image_url: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2400&q=90',
+    category: 'Himalayan'
+  },
+  {
+    id: 8,
+    title: 'Varanasi: Subah-e-Banaras Ghats & Sacred Aarti',
+    slug: 'vns-01-subah-e-banaras-ghats-kashi-vishwanath-rickshaw-yatra',
+    destination_name: 'Varanasi',
+    price: 18999,
+    duration_days: 3,
+    duration_nights: 2,
+    rating: 4.9,
+    image_url: 'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=2400&q=90',
+    category: 'Heritage'
   }
 ];
 
@@ -111,6 +135,24 @@ export default function ToursPage() {
     loadMeta();
   }, []);
 
+  // Reactively synchronize local state when URL searchParams change
+  useEffect(() => {
+    const qSearch = searchParams.get('search') || '';
+    const qDest = searchParams.get('destination') || 'all';
+    const qCat = searchParams.get('category') || 'all';
+    const qDur = searchParams.get('duration') || 'all';
+    const qPrice = searchParams.get('priceRange') || 'all';
+    const qSort = searchParams.get('sort') || 'recommended';
+
+    setSearch(qSearch);
+    setDestination(qDest);
+    setCategory(qCat);
+    setDuration(qDur);
+    setPriceRange(qPrice);
+    setSort(qSort);
+    setPage(1);
+  }, [searchParams]);
+
   useEffect(() => {
     async function fetchTours() {
       setLoading(true);
@@ -132,7 +174,7 @@ export default function ToursPage() {
         params.set('limit', '12');
 
         const res = await api.get(`/tours?${params.toString()}`);
-        if (res.success && Array.isArray(res.data) && res.data.length > 0) {
+        if (res.success && Array.isArray(res.data)) {
           setTours(res.data);
         } else {
           setTours(FALLBACK_TOURS);
@@ -331,6 +373,21 @@ export default function ToursPage() {
                   <div className="h-4 bg-[#EFE4D2]/60 w-1/2" />
                 </div>
               ))}
+            </div>
+          ) : tours.length === 0 ? (
+            <div className="bg-white border border-[#EFE4D2] rounded-2xl p-12 text-center space-y-4 shadow-xs">
+              <span className="text-4xl block">🧭</span>
+              <h3 className="font-serif text-2xl text-[#1D1B18]">No Curated Journeys Found</h3>
+              <p className="text-xs sm:text-sm text-[#6D6A61] max-w-md mx-auto font-light leading-relaxed">
+                We couldn't find any journeys matching your exact combination of filters. Try clearing your filters or exploring our signature expeditions.
+              </p>
+              <button
+                type="button"
+                onClick={resetFilters}
+                className="mt-2 inline-flex items-center gap-2 px-5 py-2.5 bg-[#1D1B18] hover:bg-[#B99762] text-[#F7F1E7] text-xs uppercase tracking-widest font-semibold transition rounded-none shadow-sm"
+              >
+                Reset All Filters
+              </button>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">

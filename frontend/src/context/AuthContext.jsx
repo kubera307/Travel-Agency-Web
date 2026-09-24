@@ -30,6 +30,15 @@ export function AuthProvider({ children }) {
       }
     }
     loadUser();
+
+    // Listen for security session expiration events from API client
+    const handleSessionExpired = () => {
+      logout();
+    };
+    window.addEventListener('auth:session_expired', handleSessionExpired);
+    return () => {
+      window.removeEventListener('auth:session_expired', handleSessionExpired);
+    };
   }, [token]);
 
   const login = async (email, password) => {

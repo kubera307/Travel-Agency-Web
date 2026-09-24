@@ -44,7 +44,7 @@ export default function WhyTravelIndia() {
             <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-white/60">
               <img
                 src="https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=1000&q=80"
-                alt="NammaYathra expedition leader with travelers in front of historic architecture"
+                alt="NammaYatra expedition leader with travelers in front of historic architecture"
                 className="w-full h-[520px] object-cover object-center"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
@@ -90,7 +90,7 @@ export default function WhyTravelIndia() {
           <div className="lg:col-span-7 space-y-8">
             <div>
               <p className="text-xs sm:text-sm font-bold uppercase tracking-widest text-orange-600 mb-2.5">
-                THE NAMMAYATHRA PROMISE
+                THE NammaYatra PROMISE
               </p>
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight font-display">
                 Travel with confidence

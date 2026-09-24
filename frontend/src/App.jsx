@@ -19,6 +19,7 @@ import TourDetailsPage from './pages/public/TourDetailsPage';
 import TourComparisonPage from './pages/public/TourComparisonPage';
 import DestinationsPage from './pages/public/DestinationsPage';
 import DestinationDetailsPage from './pages/public/DestinationDetailsPage';
+import ExperiencesPage from './pages/public/ExperiencesPage';
 import CustomTripPlannerPage from './pages/public/CustomTripPlannerPage';
 import BookingWizard from './components/booking/BookingWizard';
 import {
@@ -28,7 +29,8 @@ import {
   ContactPage,
   PrivacyPolicyPage,
   TermsPage,
-  CancellationPolicyPage
+  CancellationPolicyPage,
+  BookingGuidePage
 } from './pages/public/OtherPublicPages';
 
 // Customer Pages
@@ -38,8 +40,10 @@ import { MyBookingsPage, BookingDetailsPage } from './pages/customer/MyBookingsP
 import {
   CustomerProfilePage,
   CustomerFavouritesPage,
-  CustomerEnquiriesPage
+  CustomerEnquiriesPage,
+  CustomerFeedbackPage
 } from './pages/customer/CustomerExtraPages';
+import FeedbackPage from './pages/public/FeedbackPage';
 
 // Admin Pages
 import AdminDashboardPage from './pages/admin/AdminDashboardPage';
@@ -52,25 +56,43 @@ import {
   AdminReviewsPage,
   AdminCouponsPage
 } from './pages/admin/AdminOperationsPages';
+import { AdminAccessDenied, SecurityLoadingScreen } from './components/common/SecurityScreen';
 
-// Protected Route Helpers
+// Protected Route Helpers - Enhanced Security & RBAC
 function ProtectedCustomerRoute({ children }) {
   const { isAuthenticated, loading } = useAuth();
   const location = useLocation();
-  if (loading) return null;
+
+  if (loading) {
+    return <SecurityLoadingScreen message="Verifying traveller session..." />;
+  }
+
   if (!isAuthenticated) {
     const redirectUrl = encodeURIComponent(location.pathname + location.search);
     return <Navigate to={`/login?redirect=${redirectUrl}`} replace />;
   }
+
   return children;
 }
 
 function ProtectedAdminRoute({ children }) {
   const { user, isAuthenticated, loading } = useAuth();
-  if (loading) return null;
-  if (!isAuthenticated || (user?.role !== 'ADMIN' && user?.role !== 'STAFF')) {
-    return <Navigate to="/login" replace />;
+  const location = useLocation();
+
+  if (loading) {
+    return <SecurityLoadingScreen message="Authenticating executive credentials..." />;
   }
+
+  if (!isAuthenticated) {
+    const redirectUrl = encodeURIComponent(location.pathname + location.search);
+    return <Navigate to={`/login?redirect=${redirectUrl}`} replace />;
+  }
+
+  // Role-Based Access Control: Authenticated, but lacking administrator or staff role
+  if (user?.role !== 'ADMIN' && user?.role !== 'STAFF') {
+    return <AdminAccessDenied user={user} />;
+  }
+
   return children;
 }
 
@@ -92,6 +114,7 @@ export default function App() {
                       <Route path="/compare" element={<TourComparisonPage />} />
                       <Route path="/destinations" element={<DestinationsPage />} />
                       <Route path="/destinations/:slug" element={<DestinationDetailsPage />} />
+                      <Route path="/experiences" element={<ExperiencesPage />} />
                       <Route
                         path="/custom-trip-planner"
                         element={
@@ -109,6 +132,8 @@ export default function App() {
                       <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
                       <Route path="/terms" element={<TermsPage />} />
                       <Route path="/cancellation-policy" element={<CancellationPolicyPage />} />
+                      <Route path="/booking-guide" element={<BookingGuidePage />} />
+                      <Route path="/feedback" element={<FeedbackPage />} />
                       <Route
                         path="/booking"
                         element={
@@ -137,6 +162,7 @@ export default function App() {
                       <Route path="bookings/:id" element={<BookingDetailsPage />} />
                       <Route path="favourites" element={<CustomerFavouritesPage />} />
                       <Route path="enquiries" element={<CustomerEnquiriesPage />} />
+                      <Route path="feedback" element={<CustomerFeedbackPage />} />
                       <Route path="profile" element={<CustomerProfilePage />} />
                     </Route>
 
@@ -176,9 +202,14 @@ export default function App() {
 
 function AdminOperationsPagesFaqs() {
   return (
-    <div className="text-white space-y-4">
-      <h1 className="text-2xl font-bold">Frequently Asked Questions Management</h1>
-      <p className="text-xs text-slate-400">Manage FAQ questions and answers displayed on the public portal.</p>
+    <div className="bg-white p-8 rounded-2xl border border-[#EAE3D9] text-slate-800 space-y-3 shadow-[0_4px_20px_-2px_rgba(29,27,24,0.04)]">
+      <span className="text-xs font-bold text-[#D9A74A] uppercase tracking-widest bg-[#D9A74A]/15 px-3 py-1 rounded-full border border-[#D9A74A]/30">
+        Knowledge Base
+      </span>
+      <h1 className="font-serif text-3xl font-normal text-slate-900 mt-2">Frequently Asked Questions Management</h1>
+      <p className="text-xs text-slate-500 font-light leading-relaxed">
+        Manage curated FAQ questions, regional travel guidance, and itinerary answers displayed on the public portal.
+      </p>
     </div>
   );
 }

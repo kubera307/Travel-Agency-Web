@@ -28,13 +28,32 @@ def get_tours():
     """
     params = []
 
+    # Semantic category aliases for intuitive traveler search
+    CATEGORY_ALIASES = {
+        'wellness': ['coastal', 'adventure'],
+        'relaxation': ['coastal'],
+        'beach': ['coastal'],
+        'wildlife': ['adventure'],
+        'nature': ['adventure'],
+        'culture': ['heritage', 'city-tour'],
+        'culinary': ['city-tour', 'heritage'],
+    }
+
     if destination and destination != 'all':
         query += " AND (t.destination_id = ? OR d.slug = ?)"
         params.extend([destination, destination])
 
     if category and category != 'all':
-        query += " AND (t.category_id = ? OR c.slug = ?)"
-        params.extend([category, category])
+        cat_lower = category.lower().strip()
+        if cat_lower in CATEGORY_ALIASES:
+            slugs = CATEGORY_ALIASES[cat_lower]
+            placeholders = ','.join(['?'] * len(slugs))
+            query += f" AND (c.slug IN ({placeholders}) OR LOWER(t.title) LIKE ? OR LOWER(t.tagline) LIKE ?)"
+            params.extend(slugs)
+            params.extend([f"%{cat_lower}%", f"%{cat_lower}%"])
+        else:
+            query += " AND (t.category_id = ? OR c.slug = ?)"
+            params.extend([category, category])
 
     if departure_city:
         query += " AND LOWER(t.departure_city) LIKE LOWER(?)"
@@ -48,12 +67,14 @@ def get_tours():
         query += " AND t.sale_price <= ?"
         params.append(float(max_price))
 
-    if duration:
+    if duration and duration != 'all':
         if duration == '1':
             query += " AND t.duration_days = 1"
-        elif duration == '2-3':
-            query += " AND t.duration_days BETWEEN 2 AND 3"
-        elif duration == '4+':
+        elif duration in ('2-3', '1-3'):
+            query += " AND t.duration_days BETWEEN 1 AND 3"
+        elif duration in ('4-7',):
+            query += " AND t.duration_days BETWEEN 4 AND 7"
+        elif duration in ('4+', '8+'):
             query += " AND t.duration_days >= 4"
 
     if search:
@@ -106,6 +127,7 @@ def get_tours():
 
 @tour_bp.route('/featured', methods=['GET'])
 def get_featured_tours():
+    limit = int(request.args.get('limit', 12) or 12)
     query = """
         SELECT t.*, d.name as destination_name, d.state as destination_state, c.name as category_name, c.slug as category_slug,
                (SELECT image_url FROM tour_images WHERE tour_id = t.id ORDER BY sort_order ASC LIMIT 1) as primary_image
@@ -113,10 +135,10 @@ def get_featured_tours():
         JOIN destinations d ON t.destination_id = d.id
         JOIN categories c ON t.category_id = c.id
         WHERE t.status = 'ACTIVE' AND t.featured = 1
-        ORDER BY t.rating DESC
-        LIMIT 6
+        ORDER BY t.rating DESC, t.sale_price DESC
+        LIMIT ?
     """
-    tours = query_all(query)
+    tours = query_all(query, (limit,))
     for t in tours:
         t['departures'] = query_all(
             """SELECT * FROM departures

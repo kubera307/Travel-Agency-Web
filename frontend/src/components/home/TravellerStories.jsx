@@ -10,7 +10,7 @@ const REAL_AUTHENTIC_STORIES = [
     rating: 5,
     date: 'Autumn Journey',
     quote:
-      'We spent seven days between Sonamarg alpine tarns and an old wooden houseboat on Nigeen lake. NAMMAYATHRA arranged private tea sessions with walnut wood carvers in old Srinagar. It felt like uncovering an India that belongs to another century.',
+      'We spent seven days between Sonamarg alpine tarns and an old wooden houseboat on Nigeen lake. NammaYatra arranged private tea sessions with walnut wood carvers in old Srinagar. It felt like uncovering an India that belongs to another century.',
     image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80'
   },
   {

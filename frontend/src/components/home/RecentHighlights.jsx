@@ -49,7 +49,7 @@ export default function RecentHighlights() {
               Recent Highlights
             </span>
             <h2 className="font-serif text-2xl sm:text-3xl text-slate-900 font-normal">
-              What's New at Trekora
+              What's New at NammaYatra
             </h2>
             <p className="text-xs text-slate-500 mt-1 font-light">
               Fresh experiences, new destinations and exclusive journeys handpicked for you.

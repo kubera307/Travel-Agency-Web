@@ -29,7 +29,13 @@ import {
   Heart,
   Award,
   ExternalLink,
-  ChevronRight
+  ChevronLeft,
+  ChevronRight,
+  Camera,
+  Eye,
+  Maximize2,
+  Check,
+  X
 } from 'lucide-react';
 
 const steps = [
@@ -46,40 +52,272 @@ const steps = [
 const destinationOptions = ['Kashmir', 'Kerala', 'Rajasthan', 'Goa', 'Himachal', 'Karnataka', 'Ladakh'];
 const hotelOptions = ['Boutique stay', 'Heritage property', 'Luxury resort', 'Homestay / eco lodge'];
 const transportOptions = ['Private SUV', 'Tempo Traveller', 'Luxury sedan', 'Train + stay package'];
-const activityOptions = ['Houseboat stay', 'Trekking', 'City heritage tour', 'Wildlife safari', 'Beach outing', 'Spiritual visit'];
+const activityOptions = [
+  'Houseboat stay',
+  'Trekking',
+  'City heritage tour',
+  'Wildlife safari',
+  'Beach outing',
+  'Spiritual visit',
+  'Ayurvedic wellness',
+  'Desert stargazing'
+];
 
-// Authentic destination-specific experiences
+// 8K Photographic Metadata for Activities in Step 6
+const ACTIVITY_METADATA = {
+  'Houseboat stay': {
+    title: 'Houseboat Stay',
+    category: 'Waterways',
+    badge: '8K Lagoon View',
+    duration: 'Overnight • Meals Included',
+    desc: 'Private slow teakwood cruise through coconut lagoons with master chef.',
+    image: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=2400&q=90'
+  },
+  'Trekking': {
+    title: 'High-Altitude Trekking',
+    category: 'Mountain',
+    badge: '8K Alpine Trail',
+    duration: 'Full Day • Certified Guide',
+    desc: 'Glacial tarn crossings, cedar forest ridges, and alpine pass views.',
+    image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2400&q=90'
+  },
+  'City heritage tour': {
+    title: 'Living Heritage & Forts',
+    category: 'Heritage',
+    badge: '8K Royal Palace',
+    duration: 'Full Day • Historian Escort',
+    desc: 'Sandstone ramparts, Sheesh Mahal mirror halls, and royal courtyards.',
+    image: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=2400&q=90'
+  },
+  'Wildlife safari': {
+    title: 'Wild Tiger & Elephant Safari',
+    category: 'Nature',
+    badge: '8K Wildlife Corridor',
+    duration: 'Dawn / Dusk • 4x4 Jeep',
+    desc: 'Tracking Bengal tigers, Asiatic elephants, and hornbills with naturalists.',
+    image: 'https://images.unsplash.com/photo-1575550959106-5a7defe28b56?auto=format&fit=crop&w=2400&q=90'
+  },
+  'Beach outing': {
+    title: 'Secluded Coastal Coves',
+    category: 'Coastal',
+    badge: '8K Coastal Bay',
+    duration: 'Half Day • Coastline',
+    desc: 'Granite headland climbs, turquoise coves, and fresh coastal seafood.',
+    image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=2400&q=90'
+  },
+  'Spiritual visit': {
+    title: 'Sacred River Ghats & Aarti',
+    category: 'Spiritual',
+    badge: '8K Sacred Aarti',
+    duration: 'Dawn / Dusk Sessions',
+    desc: 'Assi Ghat morning chants, temple rituals, and evening Maha Aarti.',
+    image: 'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=2400&q=90'
+  },
+  'Ayurvedic wellness': {
+    title: 'Ayurvedic Wellness & Spa',
+    category: 'Wellness',
+    badge: '8K Valley Sanctuary',
+    duration: 'Half Day • Vaidya Guided',
+    desc: 'Shirodhara medicinal oil therapy, herbal massage, and silent pranayama.',
+    image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=2400&q=90'
+  },
+  'Desert stargazing': {
+    title: 'Thar Desert Stargazing Camp',
+    category: 'Heritage',
+    badge: '8K Desert Night',
+    duration: 'Evening & Night • Dunes',
+    desc: 'Camel rides across golden dunes, live Manganiyar music, and starry skies.',
+    image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=2400&q=90'
+  }
+};
+
+// 8K Ultra-HD Visual Showcase for Destinations
+const DESTINATION_INFO = {
+  Kashmir: {
+    title: 'Kashmir Valley',
+    tagline: 'Dal Lake Lotus Canals & Alpine Glaciers',
+    image: 'https://images.unsplash.com/photo-1595815771614-ade9d652a65d?auto=format&fit=crop&w=2400&q=90',
+    badge: '8K Mountain View',
+    alt: 'Shikara boats gliding on Dal Lake against snow mountains in 8K resolution'
+  },
+  Kerala: {
+    title: 'Kerala Backwaters',
+    tagline: 'Vembanad Palm Canals & Misty Tea Terraces',
+    image: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=2400&q=90',
+    badge: '8K Backwaters',
+    alt: 'Traditional wooden houseboat floating on calm Kerala waters in 8K'
+  },
+  Rajasthan: {
+    title: 'Royal Rajasthan',
+    tagline: 'Golden Thar Dunes, Forts & Living Palaces',
+    image: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=2400&q=90',
+    badge: '8K Golden Dunes',
+    alt: 'Sunset over golden sand ripples in the Thar Desert in 8K'
+  },
+  Goa: {
+    title: 'Goa Coastal Coves',
+    tagline: 'Turquoise Lagoons & Portuguese Latin Quarters',
+    image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=2400&q=90',
+    badge: '8K Coastal Bay',
+    alt: 'Secluded palm-fringed tropical beach cove in Goa in 8K'
+  },
+  Himachal: {
+    title: 'Himachal Heights',
+    tagline: 'Cedar Chalets, Rohtang Glacier & Spiti Passes',
+    image: 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=2400&q=90',
+    badge: '8K Alpine Snow',
+    alt: 'Majestic snowy Himalayan mountain ridges in 8K resolution'
+  },
+  Karnataka: {
+    title: 'Karnataka Wilderness',
+    tagline: 'Kapu Lighthouse, Hampi Ruins & Coorg Estates',
+    image: '/hero-lighthouse.jpg',
+    badge: '8K Coastal Icon',
+    alt: 'Kapu stone lighthouse towering over turquoise Arabian waves in 8K'
+  },
+  Ladakh: {
+    title: 'Ladakh High Desert',
+    tagline: 'Azure Pangong Tso & Highest Motorable Pass',
+    image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2400&q=90',
+    badge: '8K High Altitude',
+    alt: 'Crystal clear azure reflection at Pangong Tso lake in 8K'
+  }
+};
+
+// 8K Scenic Route Panoramas captured along private chauffeur highways
+const SCENIC_ROUTE_PANORAMAS = [
+  {
+    title: 'Pir Panjal Mountain Crest Horizon',
+    route: 'Srinagar — Mughal Highway Pass',
+    altitude: '11,400 ft Altitude',
+    badge: '8K Panorama',
+    image: 'https://images.unsplash.com/photo-1595815771614-ade9d652a65d?auto=format&fit=crop&w=2560&q=95',
+    camera: 'Sony α7R V • 24-70mm GM II • 7680×4320 HDR'
+  },
+  {
+    title: 'Vembanad Waterway Sunset Horizon',
+    route: 'Kochi — Kumarakom Chauffeur Drive',
+    altitude: 'Sea Level Lagoon',
+    badge: '8K Panorama',
+    image: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=2560&q=95',
+    camera: 'Hasselblad X2D • 38mm f/2.5 • 7680×4320 HDR'
+  },
+  {
+    title: 'Thar Desert Endless Gold Ridge',
+    route: 'Jodhpur — Jaisalmer Desert Highway',
+    altitude: 'Golden Dunes Horizon',
+    badge: '8K Panorama',
+    image: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=2560&q=95',
+    camera: 'Nikon Z8 • 14-24mm f/2.8 • 7680×4320 HDR'
+  },
+  {
+    title: 'Cabo de Rama Sea Cliff Horizon',
+    route: 'Canacona Coastal Chauffeur Route',
+    altitude: 'Overlooking Arabian Sea',
+    badge: '8K Panorama',
+    image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=2560&q=95',
+    camera: 'Sony α7R V • 16-35mm GM • 7680×4320 HDR'
+  },
+  {
+    title: 'Atal Tunnel North Portal Alpine Ridge',
+    route: 'Manali — Leh Highway Pass',
+    altitude: '10,171 ft Altitude',
+    badge: '8K Panorama',
+    image: 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=2560&q=95',
+    camera: 'Canon EOS R5 • 24-105mm • 7680×4320 HDR'
+  },
+  {
+    title: 'Kapu Granite Maritime Wave Horizon',
+    route: 'Udupi — Mangalore Coastal NH 66',
+    altitude: 'West Coast Beacon Horizon',
+    badge: '8K Panorama',
+    image: '/hero-lighthouse.jpg',
+    camera: 'Sony α7 IV • 24-70mm GM • 7680×4320 HDR'
+  },
+  {
+    title: 'Pangong Tso Mirror Reflection Crest',
+    route: 'Leh — Chang La Pass Route',
+    altitude: '14,270 ft Altitude',
+    badge: '8K Panorama',
+    image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2560&q=95',
+    camera: 'Leica SL2 • 28mm f/2.0 • 7680×4320 HDR'
+  }
+];
+
+// Authentic destination-specific experiences with 8K Ultra-HD photography (6 per destination)
 const DESTINATION_EXPERIENCES = {
   Kashmir: [
     {
-      title: 'Sunset Shikara Cruise on Dal Lake',
+      title: 'Sunset Shikara Cruise on Dal Lake & Floating Markets',
       desc: 'Glide along floating lotus gardens and century-old cedarwood houseboats as Himalayan peaks reflect in golden water.',
       duration: '2 Hours • Private Boat',
       tag: 'Signature Experience',
+      theme: 'waterways',
       rating: 4.9,
       reviews: 142,
-      image: 'https://images.unsplash.com/photo-1595815771614-ade9d652a65d?auto=format&fit=crop&w=600&q=80',
-      chauffeurTip: 'Chauffeur Bilal takes you to the secret water channels where tourists rarely go for peaceful chai.'
+      resolutionBadge: '8K Ultra-HD',
+      image: 'https://images.unsplash.com/photo-1595815771614-ade9d652a65d?auto=format&fit=crop&w=2400&q=90',
+      chauffeurTip: 'Chauffeur Bilal takes you to the secret water channels where tourists rarely go for peaceful kehwa tea.'
     },
     {
-      title: 'Gulmarg High-Altitude Gondola & Pine Forest Walk',
-      desc: 'Ascend to Phase 2 at 13,780 feet for panoramic views of Nanga Parbat and alpine meadows lined with wild iris.',
+      title: 'Gulmarg Apharwat Peak 13,780 ft High-Altitude Gondola',
+      desc: 'Ascend to Phase 2 for sweeping views of Nanga Parbat and alpine meadows covered in pristine wildflowers and snow.',
       duration: 'Full Day • Fast-Track',
-      tag: 'Mountain Thrill',
+      tag: 'Alpine Wonder',
+      theme: 'mountain',
       rating: 4.8,
       reviews: 98,
-      image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=600&q=80',
+      resolutionBadge: '8K Aerial Vista',
+      image: 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=2400&q=90',
       chauffeurTip: 'Pre-booked early morning cable slot avoids the 2-hour tourist queue.'
     },
     {
-      title: 'Pampore Saffron Harvest & Old Srinagar Wazwan Trail',
-      desc: 'Walk through purple saffron fields, visit historic copper craftsmen in the old quarter, and savor authentic 7-course wazwan.',
-      duration: 'Half Day • Culinary',
+      title: 'Betaab Valley & Lidder River Alpine Pine Forest Walk',
+      desc: 'Walk beside roaring glacier-fed streams surrounded by dense cedar canopies and breathtaking snow-dusted ridges.',
+      duration: 'Half Day • Nature Trail',
+      tag: 'Wild Nature',
+      theme: 'nature',
+      rating: 4.9,
+      reviews: 110,
+      resolutionBadge: '8K Landscape',
+      image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2400&q=90',
+      chauffeurTip: 'Pack walking shoes for the hidden walking trail leading to natural spring water pools.'
+    },
+    {
+      title: 'Pampore Purple Saffron Harvest & Old City Wazwan Feast',
+      desc: 'Walk through blooming purple saffron fields, visit historic copper craftsmen in Srinagar, and savor authentic 7-course wazwan.',
+      duration: 'Half Day • Culinary Trail',
       tag: 'Cultural Heritage',
+      theme: 'heritage',
       rating: 5.0,
       reviews: 86,
-      image: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=600&q=80',
+      resolutionBadge: '8K Heritage',
+      image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=2400&q=90',
       chauffeurTip: 'Try the traditional walnut fudge and steaming saffron Kehwa at Ahdoos.'
+    },
+    {
+      title: 'Sonamarg Thajiwas Glacier Snow Sledging & Stream Walk',
+      desc: 'Hike or ride pony trails to pristine summer snowfields under the shadow of dramatic hanging glaciers.',
+      duration: 'Full Day • Glacier Walk',
+      tag: 'Glacier Vista',
+      theme: 'mountain',
+      rating: 4.9,
+      reviews: 120,
+      resolutionBadge: '8K Glacier View',
+      image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=2400&q=90',
+      chauffeurTip: 'Cross the stream to the lesser-known right moraine for unobstructed panoramic views.'
+    },
+    {
+      title: 'Mughal Terraced Fountains: Nishat & Shalimar Bagh',
+      desc: 'Wander 12 cascading stone water terraces flanked by giant Chinar trees planted during Emperor Jahangir’s reign.',
+      duration: 'Half Day • Garden Heritage',
+      tag: 'Royal Gardens',
+      theme: 'heritage',
+      rating: 4.8,
+      reviews: 95,
+      resolutionBadge: '8K Floral Vistas',
+      image: 'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=2400&q=90',
+      chauffeurTip: 'Visit Nishat Bagh at 5:00 PM when the fountains mirror Dal Lake sunset light.'
     }
   ],
   Kerala: [
@@ -88,30 +326,72 @@ const DESTINATION_EXPERIENCES = {
       desc: 'Drift along palm-fringed canals, witness village fishing life, and enjoy fresh pearl spot karimeen cooked on board.',
       duration: 'Overnight • All Meals Included',
       tag: 'Signature Experience',
+      theme: 'waterways',
       rating: 4.9,
       reviews: 210,
-      image: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=600&q=80',
+      resolutionBadge: '8K Lagoon View',
+      image: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=2400&q=90',
       chauffeurTip: 'Anchor near the quiet R-Block paddy fields for the most peaceful sunrise.'
     },
     {
-      title: 'Munnar Misty Tea Plantation & Spice Garden Trail',
-      desc: 'Breathe in cardamom and clove scents, walk through emerald tea terraces, and watch tea-leaf plucking by local cooperatives.',
+      title: 'Munnar Misty Tea Terraces & Kolukkumalai Sunrise Trail',
+      desc: 'Breathe in cardamom and clove scents, walk through emerald tea terraces, and watch sunrise over mountain mist.',
       duration: '4 Hours • Guided Walk',
       tag: 'Nature & Wellness',
+      theme: 'nature',
       rating: 4.8,
       reviews: 130,
-      image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=600&q=80',
+      resolutionBadge: '8K Panorama',
+      image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=2400&q=90',
       chauffeurTip: 'Visit the Kolukkumalai estate early for the highest tea garden sunrise in the world.'
     },
     {
-      title: 'Authentic Kathakali & Kalaripayattu Martial Heritage',
-      desc: 'Watch ancient temple warriors demonstrate sword combat and actors perform expressive facial makeup ceremonies.',
-      duration: '2 Hours • VIP Seating',
-      tag: 'Art & Heritage',
+      title: 'Periyar Rainforest Bamboo Rafting & Wild Elephant Trail',
+      desc: 'Paddle through silent tiger reserve waters flanked by towering evergreen rainforest canopies and wild herds.',
+      duration: 'Full Day • Eco Safari',
+      tag: 'Wildlife Adventure',
+      theme: 'nature',
       rating: 4.9,
+      reviews: 104,
+      resolutionBadge: '8K Eco Safari',
+      image: 'https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&w=2400&q=90',
+      chauffeurTip: 'Wear neutral earthy colors and carry waterproof phone covers for bamboo rafting.'
+    },
+    {
+      title: 'Varkala Clifftop Sunset & Sacred Janardanaswamy Shrine',
+      desc: 'Stroll red laterite cliffs towering over the Arabian Sea, witness Tibetan handicraft studios, and explore 2,000-year-old temples.',
+      duration: 'Half Day • Coastal Bliss',
+      tag: 'Coastal Heritage',
+      theme: 'waterways',
+      rating: 4.8,
       reviews: 95,
-      image: 'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=600&q=80',
-      chauffeurTip: 'Arrive 30 minutes early to watch the intricate natural mineral makeup application.'
+      resolutionBadge: '8K Golden Hour',
+      image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=2400&q=90',
+      chauffeurTip: 'Clifftop cafes serve fresh coconut water and warm Malabar parottas with spicy curries.'
+    },
+    {
+      title: 'Fort Kochi Chinese Fishing Nets & Mattancherry Palace',
+      desc: 'Watch ancient cantilevered fishing nets dip into the Arabian harbour and explore 400-year-old spice merchant alleys.',
+      duration: 'Half Day • Colonial Port',
+      tag: 'Maritime Heritage',
+      theme: 'heritage',
+      rating: 4.9,
+      reviews: 150,
+      resolutionBadge: '8K Maritime',
+      image: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=2400&q=90',
+      chauffeurTip: 'Visit Jew Town spice warehouse stalls around 4:00 PM when cardamom sacks are freshly milled.'
+    },
+    {
+      title: 'Athirappilly "Niagara of India" 80 ft Waterfall Trail',
+      desc: 'Hike through lush Chalakudy river canopies down to the base of Kerala’s largest roaring waterfall cascade.',
+      duration: 'Half Day • Rainforest Walk',
+      tag: 'Roaring Cascades',
+      theme: 'nature',
+      rating: 4.9,
+      reviews: 118,
+      resolutionBadge: '8K Waterfalls',
+      image: 'https://images.unsplash.com/photo-1575550959106-5a7defe28b56?auto=format&fit=crop&w=2400&q=90',
+      chauffeurTip: 'Early mornings provide rainbow mists against emerald bamboo forests.'
     }
   ],
   Karnataka: [
@@ -119,31 +399,73 @@ const DESTINATION_EXPERIENCES = {
       title: 'Kapu Beach Lighthouse & Coastal Sunset Walk',
       desc: 'Climb the 125-year-old black-and-white stone lighthouse for 360-degree views of roaring turquoise Arabian Sea waves.',
       duration: 'Half Day • Coastal Bliss',
-      tag: 'Trekora Highlight',
+      tag: 'NammaYatra Highlight',
+      theme: 'waterways',
       rating: 4.9,
       reviews: 175,
+      resolutionBadge: '8K Coastal Icon',
       image: '/hero-lighthouse.jpg',
       chauffeurTip: 'The lighthouse opens for climbing between 4 PM and 6 PM. Sunset from the top is unforgettable.'
     },
     {
-      title: 'Udupi Sri Krishna Temple Morning Chimes & Brahmin Bhojana',
-      desc: 'Peer through the sacred Navagraha Kindi silver window and savor satvik temple feast served on fresh plantain leaves.',
-      duration: '3 Hours • Spiritual Heritage',
-      tag: 'Spiritual Quest',
+      title: 'Hampi UNESCO Vijayanagara Stone Chariot & Virupaksha',
+      desc: 'Marvel at 14th-century boulder-strewn kingdoms, musical pillars of Vittala temple, and sunsets over Tungabhadra River.',
+      duration: 'Full Day • Living History',
+      tag: 'World Heritage',
+      theme: 'heritage',
       rating: 5.0,
-      reviews: 160,
-      image: 'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=600&q=80',
-      chauffeurTip: 'Dress code: traditional dhoti/kurta or saree. Leave leather items in the vehicle.'
+      reviews: 220,
+      resolutionBadge: '8K Monumental',
+      image: 'https://images.unsplash.com/photo-1593693411515-c20261bcad6e?auto=format&fit=crop&w=2400&q=90',
+      chauffeurTip: 'Hire a coracle round boat to glide past the boulders of the river gorge at sunset.'
     },
     {
       title: 'Coorg Misty Arabica Coffee & Pepper Plantation Estate Stay',
       desc: 'Wake up to hornbill calls, walk through red coffee cherry canopies, and taste artisanal single-origin roasts.',
       duration: 'Full Day • Plantation Trek',
       tag: 'Nature Escape',
+      theme: 'nature',
       rating: 4.8,
       reviews: 114,
-      image: 'https://images.unsplash.com/photo-1575550959106-5a7defe28b56?auto=format&fit=crop&w=600&q=80',
+      resolutionBadge: '8K Rainforest',
+      image: 'https://images.unsplash.com/photo-1575550959106-5a7defe28b56?auto=format&fit=crop&w=2400&q=90',
       chauffeurTip: 'Chauffeur Suresh introduces you to local Kodava families for authentic home-cooked dishes.'
+    },
+    {
+      title: 'Malpe St. Mary’s Hexagonal Basaltic Rock Islands',
+      desc: 'Cruise to rare volcanic geological formations carved by cooling lava 88 million years ago, surrounded by turquoise water.',
+      duration: '3 Hours • Marine Cruise',
+      tag: 'Geological Wonder',
+      theme: 'waterways',
+      rating: 4.9,
+      reviews: 140,
+      resolutionBadge: '8K Marine Vista',
+      image: 'https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?auto=format&fit=crop&w=2400&q=90',
+      chauffeurTip: 'Carry reef shoes to walk safely across the smooth hexagonal basalt columns.'
+    },
+    {
+      title: 'Kabini River Wildlife Boat Safari & Black Panther Reserve',
+      desc: 'Board quiet boats on Kabini backwaters where Asiatic elephants swim and leopards stalk along shoreline grass.',
+      duration: 'Dawn & Dusk Safari',
+      tag: 'Predator Corridors',
+      theme: 'nature',
+      rating: 5.0,
+      reviews: 132,
+      resolutionBadge: '8K Wildlife Reserve',
+      image: 'https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&w=2400&q=90',
+      chauffeurTip: 'Dusk boat safaris offer the highest probability of spotting mother elephants bathing calves.'
+    },
+    {
+      title: 'Badami Rock-Cut Cave Temples & Agastya Lake Basin',
+      desc: 'Admire 6th-century Chalukyan red sandstone cave architecture carved into massive sandstone cliff bluffs.',
+      duration: 'Half Day • Ancient Caves',
+      tag: 'Sandstone Heritage',
+      theme: 'heritage',
+      rating: 4.9,
+      reviews: 98,
+      resolutionBadge: '8K Cliff Architecture',
+      image: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=2400&q=90',
+      chauffeurTip: 'Climb to North Fort before noon for the best lighting on the emerald lake below.'
     }
   ],
   Rajasthan: [
@@ -152,52 +474,146 @@ const DESTINATION_EXPERIENCES = {
       desc: 'Ride majestic camels across wind-sculpted sand ripples, watch vibrant Kalbelia folk dancers, and sleep under desert stars.',
       duration: 'Overnight • Luxury Tents',
       tag: 'Desert Romance',
+      theme: 'heritage',
       rating: 4.9,
       reviews: 188,
-      image: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=600&q=80',
+      resolutionBadge: '8K Desert Gold',
+      image: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=2400&q=90',
       chauffeurTip: 'Private 4x4 dune bashing before sunset gives adrenaline that coaches cannot offer.'
+    },
+    {
+      title: 'Udaipur Lake Pichola Royal Ferry & City Palace Court',
+      desc: 'Board vintage brass boats beneath marble balconies, admiring the floating Lake Palace reflecting on mirror water.',
+      duration: 'Half Day • Royal Splendor',
+      tag: 'Palace Living',
+      theme: 'waterways',
+      rating: 5.0,
+      reviews: 196,
+      resolutionBadge: '8K Royal Lake',
+      image: 'https://images.unsplash.com/photo-1605649487212-47bdab064df7?auto=format&fit=crop&w=2400&q=90',
+      chauffeurTip: 'Book the 5:30 PM royal jetty slot to catch city lights illuminating the lake.'
     },
     {
       title: 'Amber Fort Secret Underground Tunnel & Chhatris Walk',
       desc: 'Explore the 16th-century fortress, Sheesh Mahal mirror palace, and hidden underground royal escape passages to Jaigarh.',
       duration: 'Half Day • Historian Guided',
       tag: 'Royal Heritage',
+      theme: 'heritage',
       rating: 4.9,
       reviews: 204,
-      image: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=600&q=80',
+      resolutionBadge: '8K Fortress',
+      image: 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=2400&q=90',
       chauffeurTip: 'Beat the desert heat by starting at 8:00 AM sharp.'
     },
     {
-      title: 'Shekhawati Painted Havelis & Artisan Block Printing',
-      desc: 'Discover open-air fresco galleries in Mandawa, meet traditional woodblock printing masters, and try your hand at vegetable dyes.',
-      duration: 'Full Day • Heritage Trail',
-      tag: 'Artisan Living',
+      title: 'Jodhpur Blue City Brahmin Alleys & Mehrangarh Ramparts',
+      desc: 'Look out from 400-foot cliff ramparts over indigo-painted courtyards and savor saffron mawa kachori in old markets.',
+      duration: 'Half Day • Citadel Walk',
+      tag: 'Living Culture',
+      theme: 'heritage',
+      rating: 4.9,
+      reviews: 155,
+      resolutionBadge: '8K Architecture',
+      image: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=2400&q=90',
+      chauffeurTip: 'Rampart terrace offers the best panoramic view of the sun setting over the blue rooftops.'
+    },
+    {
+      title: 'Pushkar Holy Brahma Lake Ghats & Desert Rose Terraces',
+      desc: 'Participate in evening maha-aarti along 52 bathing ghats and walk through fragrant damask rose oil distillation farms.',
+      duration: 'Half Day • Sacred Ghats',
+      tag: 'Spiritual Radiance',
+      theme: 'spiritual',
       rating: 4.8,
-      reviews: 79,
-      image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=600&q=80',
-      chauffeurTip: 'The painted havelis of Nawalgarh have the finest Italian fresco pigments from the 1890s.'
+      reviews: 110,
+      resolutionBadge: '8K Sacred Ghats',
+      image: 'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=2400&q=90',
+      chauffeurTip: 'Savor rabdi malpua at Halwai Gali after evening aarti.'
+    },
+    {
+      title: 'Jaisalmer Golden Yellow Sandstone Living Fort Walk',
+      desc: 'Walk inside one of the only living forts in the world, inhabited by 4,000 residents across seven Jain temples.',
+      duration: '3 Hours • Living Citadel',
+      tag: 'Golden Fortress',
+      theme: 'heritage',
+      rating: 4.9,
+      reviews: 145,
+      resolutionBadge: '8K Sandstone',
+      image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=2400&q=90',
+      chauffeurTip: 'Cannon Point at sunset offers a magical view of golden limestone glowing like fire.'
     }
   ],
   Himachal: [
     {
-      title: 'Rohtang Snowline Drive & Solang Valley Cedar Canopy',
-      desc: 'Traverse 13,058 ft winding mountain roads with glacier waterfalls, cedar forests, and views of the Pir Panjal range.',
+      title: 'Rohtang Snowline Drive & 13,058 ft Glacier Crest',
+      desc: 'Traverse winding mountain roads with glacier waterfalls, cedar forests, and panoramic views of the Pir Panjal range.',
       duration: 'Full Day • High Mountain',
       tag: 'Alpine Thrill',
+      theme: 'mountain',
       rating: 4.8,
       reviews: 165,
-      image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=600&q=80',
+      resolutionBadge: '8K Glacier Pass',
+      image: 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=2400&q=90',
       chauffeurTip: 'Our drivers carry government green-corridor permits so you do not wait at border barriers.'
+    },
+    {
+      title: 'Spiti Valley Key Gompa & Cold Desert Expedition',
+      desc: 'Cross Kunzum Pass into surreal high-altitude Buddhist sanctuaries perched atop thousands of feet of bare mountain cliff.',
+      duration: '2 Days • High Altitude',
+      tag: 'Spiritual Ridge',
+      theme: 'mountain',
+      rating: 5.0,
+      reviews: 140,
+      resolutionBadge: '8K Mountain Peak',
+      image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2400&q=90',
+      chauffeurTip: 'Stay hydrated with warm sea-buckthorn tea to acclimatize effortlessly.'
     },
     {
       title: 'Old Manali Apple Orchard Homestay & Wood-Fired Cafes',
       desc: 'Stroll past rustic Himachali wooden architecture, babbling mountain streams, and artisan trout bakeries.',
       duration: 'Relaxed Day',
       tag: 'Slow Living',
+      theme: 'nature',
       rating: 4.9,
       reviews: 92,
-      image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=600&q=80',
+      resolutionBadge: '8K Alpine Chalet',
+      image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=2400&q=90',
       chauffeurTip: 'Try the fresh river trout with Himalayan mountain butter at Cafe 1947.'
+    },
+    {
+      title: 'Dharamshala Pine Valley & Kangra Tea Estate Promenade',
+      desc: 'Breathe crisp Himalayan air among deodar cedars, visit the Tibetan Dalai Lama temple, and taste orthodox tea.',
+      duration: 'Half Day • Peaceful Retreat',
+      tag: 'Peace & Serenity',
+      theme: 'nature',
+      rating: 4.8,
+      reviews: 88,
+      resolutionBadge: '8K Cedar Forest',
+      image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=2400&q=90',
+      chauffeurTip: 'Bhagsunag waterfall early in the morning is untouched by day crowds.'
+    },
+    {
+      title: 'Chandratal Moon Lake Turquoise Glacial Basin Trek',
+      desc: 'Hike to the crescent-shaped sacred alpine lake reflecting snowy peaks at an elevation of 14,100 ft.',
+      duration: 'Full Day / Overnight',
+      tag: 'Glacial Tarn',
+      theme: 'mountain',
+      rating: 5.0,
+      reviews: 112,
+      resolutionBadge: '8K Moon Lake',
+      image: 'https://images.unsplash.com/photo-1595815771614-ade9d652a65d?auto=format&fit=crop&w=2400&q=90',
+      chauffeurTip: 'Camp at designated eco-tents 3 km away to protect the pristine lake ecology.'
+    },
+    {
+      title: 'Parvati Valley Kasol Pine River Trails & Manikaran Springs',
+      desc: 'Walk along the roaring crystal Parvati River through deodar forests to natural hot sulfur healing springs.',
+      duration: 'Full Day • River Trail',
+      tag: 'Roaring Valley',
+      theme: 'nature',
+      rating: 4.8,
+      reviews: 105,
+      resolutionBadge: '8K River Crest',
+      image: 'https://images.unsplash.com/photo-1575550959106-5a7defe28b56?auto=format&fit=crop&w=2400&q=90',
+      chauffeurTip: 'Eat langar meal cooked naturally in the bubbling hot spring water at Manikaran Sahib.'
     }
   ],
   Goa: [
@@ -206,9 +622,11 @@ const DESTINATION_EXPERIENCES = {
       desc: 'Leave the crowded commercial north behind for secluded turquoise coves at Cola beach with freshwater lagoons.',
       duration: 'Full Day • Coastal Escape',
       tag: 'Secret Coast',
+      theme: 'waterways',
       rating: 4.9,
       reviews: 140,
-      image: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=600&q=80',
+      resolutionBadge: '8K Coastal Cove',
+      image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=2400&q=90',
       chauffeurTip: 'Enjoy coconut water right by the natural freshwater lagoon meeting the sea.'
     },
     {
@@ -216,10 +634,60 @@ const DESTINATION_EXPERIENCES = {
       desc: 'Wander through pastel yellow and cobalt blue Portuguese villas, ornate wooden balconies, and boutique azulejo tile studios.',
       duration: '3 Hours • Architectural',
       tag: 'Living Heritage',
+      theme: 'heritage',
       rating: 4.8,
       reviews: 112,
-      image: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=600&q=80',
+      resolutionBadge: '8K Old Town',
+      image: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=2400&q=90',
       chauffeurTip: 'Stop at Joseph Bar for artisanal feni cocktails and warm poee bread.'
+    },
+    {
+      title: 'Dudhsagar Four-Tiered Mountain Waterfall Jeep Safari',
+      desc: 'Ride private 4x4 jeeps across rocky streams of Bhagwan Mahaveer Sanctuary to the milky cascade plunging 1,017 feet.',
+      duration: 'Full Day • Jungle Thrill',
+      tag: 'Waterfall Quest',
+      theme: 'nature',
+      rating: 4.9,
+      reviews: 165,
+      resolutionBadge: '8K Jungle Falls',
+      image: 'https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&w=2400&q=90',
+      chauffeurTip: 'Life jackets are mandatory for swimming in the crystal fresh natural pool below.'
+    },
+    {
+      title: 'Butterfly Beach Dolphin Lagoon & Secluded Snorkeling',
+      desc: 'Accessible primarily by boat, this semi-circular white sand cove is famous for playful dolphins and clear coral waters.',
+      duration: 'Half Day • Marine Safari',
+      tag: 'Dolphin Safari',
+      theme: 'waterways',
+      rating: 4.8,
+      reviews: 98,
+      resolutionBadge: '8K Ocean Waters',
+      image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=2400&q=90',
+      chauffeurTip: 'Early morning 7 AM departures give the calmest water and best dolphin sightings.'
+    },
+    {
+      title: 'Divar Island Backwater Kayaking & Heritage Mansions',
+      desc: 'Paddle through silent mangrove estuaries where kingfishers hunt, followed by cycling along quaint sleepy island hamlets.',
+      duration: 'Half Day • Island Haven',
+      tag: 'Island Stillness',
+      theme: 'waterways',
+      rating: 4.9,
+      reviews: 86,
+      resolutionBadge: '8K Island Kayak',
+      image: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=2400&q=90',
+      chauffeurTip: 'Take the romantic car ferry from Ribandar wharf for the most scenic approach.'
+    },
+    {
+      title: 'Sahakari Spice Farm Guided Trail & Traditional Goan Buffet',
+      desc: 'Walk through organic betel nut, vanilla, and peri-peri pepper groves, followed by a herbal cashew fenny demonstration.',
+      duration: '3 Hours • Agrarian Trail',
+      tag: 'Spice Aromas',
+      theme: 'nature',
+      rating: 4.8,
+      reviews: 120,
+      resolutionBadge: '8K Spice Garden',
+      image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=2400&q=90',
+      chauffeurTip: 'Sample the freshly squeezed sugarcane juice spiced with ginger and green chillies.'
     }
   ],
   Ladakh: [
@@ -228,9 +696,11 @@ const DESTINATION_EXPERIENCES = {
       desc: 'Cross 17,590 ft pass into the surreal 134-km saltwater lake that shifts shades from sapphire blue to turquoise and emerald green.',
       duration: 'Overnight • Lake Tents',
       tag: 'Himalayan Wonder',
+      theme: 'mountain',
       rating: 5.0,
       reviews: 195,
-      image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=600&q=80',
+      resolutionBadge: '8K Azure Lake',
+      image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2400&q=90',
       chauffeurTip: 'Keep warm layers handy; nighttime temperatures drop below freezing even in June.'
     },
     {
@@ -238,10 +708,60 @@ const DESTINATION_EXPERIENCES = {
       desc: 'Cross the world’s highest motorable pass (Khardung La, 18,380 ft), meet Bactrian double-humped camels, and hear monks chant.',
       duration: '2 Days • High Desert',
       tag: 'Bucket List',
+      theme: 'mountain',
       rating: 4.9,
       reviews: 168,
-      image: 'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=600&q=80',
+      resolutionBadge: '8K Cold Desert',
+      image: 'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=2400&q=90',
       chauffeurTip: 'Our vehicles carry medical grade oxygen canisters and certified pulse oximeters.'
+    },
+    {
+      title: 'Khardung La (18,380 ft) Motorable Summit Flag Ceremony',
+      desc: 'Stand on the legendary gateway to the Shyok and Nubra valleys, decorated with colorful fluttering Tibetan prayer flags.',
+      duration: 'Half Day • World Record Road',
+      tag: 'Summit Pass',
+      theme: 'mountain',
+      rating: 4.9,
+      reviews: 180,
+      resolutionBadge: '8K Mountain Roof',
+      image: 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=2400&q=90',
+      chauffeurTip: 'Spend no more than 20 minutes at the top to avoid high-altitude headache.'
+    },
+    {
+      title: 'Thiksey Monastery Sunrise Chants & Indus Valley Panorama',
+      desc: 'Resembling the Potala Palace of Lhasa, listen to conch shells and deep Tibetan horns echoing across high desert plateaus.',
+      duration: '3 Hours • Spiritual Heritage',
+      tag: 'Sacred Living',
+      theme: 'spiritual',
+      rating: 5.0,
+      reviews: 135,
+      resolutionBadge: '8K Sacred Temple',
+      image: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=2400&q=90',
+      chauffeurTip: 'Arrive by 6:00 AM to sit with the young novice monks during morning butter-tea prayer.'
+    },
+    {
+      title: 'Magnetic Hill Defying Gravity & Pathar Sahib Gurudwara',
+      desc: 'Witness vehicles rolling uphill on neutral gear against optical valley illusions, followed by serene langar tea at 11,000 ft.',
+      duration: 'Half Day • Optical Wonder',
+      tag: 'Gravity Hill',
+      theme: 'mountain',
+      rating: 4.8,
+      reviews: 140,
+      resolutionBadge: '8K Valley Wonder',
+      image: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=2400&q=90',
+      chauffeurTip: 'Turn off engine completely and align tires with the yellow marker box to feel the magnetic pull.'
+    },
+    {
+      title: 'Tso Moriri High-Altitude Wetland & Nomadic Changpa Camps',
+      desc: 'A pristine sanctuary for bar-headed geese and Tibetan wild ass (kiang) fringed by snow peaks and nomadic yak hair tents.',
+      duration: '2 Days • Deep Wilderness',
+      tag: 'Changthang Plateau',
+      theme: 'mountain',
+      rating: 5.0,
+      reviews: 110,
+      resolutionBadge: '8K High Wetland',
+      image: 'https://images.unsplash.com/photo-1595815771614-ade9d652a65d?auto=format&fit=crop&w=2400&q=90',
+      chauffeurTip: 'Korzok village monastery at the lake head is one of the highest permanently inhabited hamlets on Earth.'
     }
   ]
 };
@@ -262,7 +782,7 @@ const DESTINATION_STORIES = {
   },
   Karnataka: {
     author: 'Aditya & Ananya Roy (Hyderabad)',
-    quote: '"Climbing the Kapu beach lighthouse at sunset and having breakfast by the Udupi Krishna temple was the highlight of our year. Transparent pricing, zero hidden charges. Highly recommend Trekora!"',
+    quote: '"Climbing the Kapu beach lighthouse at sunset and having breakfast by the Udupi Krishna temple was the highlight of our year. Transparent pricing, zero hidden charges. Highly recommend NammaYatra!"',
     date: 'Travelled Sep 2026',
     rating: 5
   },
@@ -274,13 +794,13 @@ const DESTINATION_STORIES = {
   },
   Himachal: {
     author: 'Tanya Sengupta (Kolkata)',
-    quote: '"Solo traveled to Himachal with Trekora. The chauffeur was verified, respectful, and navigated the Rohtang curves with exceptional skill. Felt completely safe throughout."',
+    quote: '"Solo traveled to Himachal with NammaYatra. The chauffeur was verified, respectful, and navigated the Rohtang curves with exceptional skill. Felt completely safe throughout."',
     date: 'Travelled Aug 2026',
     rating: 5
   },
   Goa: {
     author: 'Karan & Pooja Shah (Ahmedabad)',
-    quote: '"We wanted quiet beaches away from commercial crowds. Trekora gave us South Goa secluded coves and authentic Portuguese villa dining. Worth every single rupee."',
+    quote: '"We wanted quiet beaches away from commercial crowds. NammaYatra gave us South Goa secluded coves and authentic Portuguese villa dining. Worth every single rupee."',
     date: 'Travelled Aug 2026',
     rating: 5
   },
@@ -366,6 +886,8 @@ export default function CustomTripPlannerPage() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [active8kImage, setActive8kImage] = useState(null);
+  const [explorerTheme, setExplorerTheme] = useState('all');
 
   useEffect(() => {
     if (user) {
@@ -446,7 +968,7 @@ export default function CustomTripPlannerPage() {
         activities: formData.activities.length > 0 ? formData.activities : ['General sightseeing'],
         specialRequirements: `${formData.notes || ''} [Quotation ID: ${newQuoteId}] [Est Cost: ₹${costBreakdown.totalCost}]`,
         name: formData.name || user?.name || 'Valued Guest',
-        email: formData.email || user?.email || 'guest@nammayathra.in',
+        email: formData.email || user?.email || 'guest@nammayatra.in',
         phone: formData.phone || user?.phone || 'Not provided',
         tripType: 'custom_trip',
       });
@@ -470,7 +992,7 @@ export default function CustomTripPlannerPage() {
   // Download text file receipt
   const handleDownloadText = () => {
     const content = `======================================================================
-TREKORA / NAMMAYATHRA - OFFICIAL CUSTOM TRIP QUOTATION
+NAMMAYATRA - OFFICIAL CUSTOM TRIP QUOTATION
 ======================================================================
 Quotation Reference : ${quoteId || 'NY-Q26-88492'}
 Date Generated      : ${new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
@@ -511,14 +1033,14 @@ POLICIES & GUARANTEES:
 • Zero hidden fees: Driver day allowance, highway tolls, and fuel surcharges included.
 • Verified Sarathi chauffeurs with 24x7 SOS helpline support (1800-242-728).
 
-Trekora Concierge Desk: support@travelindia.org | WhatsApp: +91 98765 43210
+NammaYatra Concierge Desk: support@travelindia.org | WhatsApp: +91 98765 43210
 ======================================================================`;
 
     const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `Trekora-Trip-Quotation-${quoteId || 'NY-Q26'}.txt`;
+    a.download = `Nammayatra-Trip-Quotation-${quoteId || 'NY-Q26'}.txt`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -528,7 +1050,7 @@ Trekora Concierge Desk: support@travelindia.org | WhatsApp: +91 98765 43210
 
   // Copy to clipboard
   const handleCopyQuotation = () => {
-    const summary = `Trekora Trip Quotation (${quoteId}) for ${formData.destination} - Estimated Total: ₹${costBreakdown.totalCost.toLocaleString('en-IN')}. Group: ${formData.travellers} guests. Dates: ${formData.date || 'Flexible'}. Stays: ${formData.hotel}. Vehicle: ${formData.transport}.`;
+    const summary = `NammaYatra Trip Quotation (${quoteId}) for ${formData.destination} - Estimated Total: ₹${costBreakdown.totalCost.toLocaleString('en-IN')}. Group: ${formData.travellers} guests. Dates: ${formData.date || 'Flexible'}. Stays: ${formData.hotel}. Vehicle: ${formData.transport}.`;
     navigator.clipboard.writeText(summary);
     showToast('Quotation details copied to clipboard!', 'success');
   };
@@ -536,7 +1058,7 @@ Trekora Concierge Desk: support@travelindia.org | WhatsApp: +91 98765 43210
   // Share to WhatsApp
   const handleWhatsAppShare = () => {
     const msg = encodeURIComponent(
-      `*Hi Trekora Concierge!* I generated Quotation *${quoteId}* on the website:\n` +
+      `*Hi NammaYatra Concierge!* I generated Quotation *${quoteId}* on the website:\n` +
       `• *Destination:* ${formData.destination}\n` +
       `• *Travel Date:* ${formData.date || 'Flexible'}\n` +
       `• *Travellers:* ${formData.travellers}\n` +
@@ -549,7 +1071,26 @@ Trekora Concierge Desk: support@travelindia.org | WhatsApp: +91 98765 43210
   };
 
   const currentExperiences = DESTINATION_EXPERIENCES[formData.destination] || DESTINATION_EXPERIENCES.Kashmir;
+  const filteredExperiences = explorerTheme === 'all'
+    ? currentExperiences
+    : currentExperiences.filter((exp) => exp.theme === explorerTheme);
   const currentStory = DESTINATION_STORIES[formData.destination] || DESTINATION_STORIES.Kashmir;
+
+  const handleNext8k = () => {
+    if (!active8kImage) return;
+    const all = currentExperiences;
+    const idx = all.findIndex((e) => e.title === active8kImage.title);
+    const nextIdx = (idx + 1) % all.length;
+    setActive8kImage({ ...all[nextIdx], destination: formData.destination });
+  };
+
+  const handlePrev8k = () => {
+    if (!active8kImage) return;
+    const all = currentExperiences;
+    const idx = all.findIndex((e) => e.title === active8kImage.title);
+    const prevIdx = (idx - 1 + all.length) % all.length;
+    setActive8kImage({ ...all[prevIdx], destination: formData.destination });
+  };
 
   return (
     <div className="section-shell py-8 sm:py-12 space-y-12">
@@ -709,7 +1250,7 @@ Trekora Concierge Desk: support@travelindia.org | WhatsApp: +91 98765 43210
             <div className="flex flex-col sm:flex-row sm:items-start justify-between pb-6 border-b border-slate-200 gap-4">
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xl font-bold tracking-tight text-slate-900 font-serif">Trekora</span>
+                  <span className="text-xl font-bold tracking-tight text-slate-900 font-serif">NammaYatra</span>
                   <span className="text-[10px] uppercase font-bold tracking-widest bg-[#B68D40]/15 text-[#B68D40] px-2.5 py-0.5 rounded-md">
                     Open Mobility Bharat
                   </span>
@@ -976,24 +1517,54 @@ Trekora Concierge Desk: support@travelindia.org | WhatsApp: +91 98765 43210
                 </div>
                 <span className="text-xs text-slate-400 hidden sm:inline">Priority selection</span>
               </div>
-              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                {destinationOptions.map((destination) => (
-                  <button
-                    type="button"
-                    key={destination}
-                    onClick={() => updateField('destination', destination)}
-                    className={`rounded-[20px] border px-4 py-4 text-left text-base font-semibold transition ${
-                      formData.destination === destination
-                        ? 'border-[#B68D40] bg-[#fff8eb] text-slate-900 shadow-[0_12px_24px_rgba(182,141,64,0.15)] ring-1 ring-[#B68D40]'
-                        : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span>{destination}</span>
-                      {formData.destination === destination && <CheckCircle2 className="w-4 h-4 text-[#B68D40]" />}
-                    </div>
-                  </button>
-                ))}
+              <div className="grid gap-3.5 sm:grid-cols-2 xl:grid-cols-3">
+                {destinationOptions.map((destination) => {
+                  const destInfo = DESTINATION_INFO[destination] || {};
+                  const isSelected = formData.destination === destination;
+                  return (
+                    <button
+                      type="button"
+                      key={destination}
+                      onClick={() => updateField('destination', destination)}
+                      className={`group relative overflow-hidden rounded-[22px] border text-left transition-all duration-300 ${
+                        isSelected
+                          ? 'border-[#B68D40] ring-2 ring-[#B68D40] shadow-xl scale-[1.01]'
+                          : 'border-slate-200 bg-white hover:border-[#B68D40]/60 hover:shadow-lg'
+                      }`}
+                    >
+                      <div className="relative h-32 w-full overflow-hidden bg-slate-900">
+                        <img
+                          src={destInfo.image}
+                          alt={destInfo.alt || destination}
+                          className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                          loading="lazy"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
+                        
+                        {/* 8K Badge */}
+                        <div className="absolute top-2.5 left-2.5 flex items-center gap-1 bg-black/70 backdrop-blur-md px-2 py-0.5 rounded-full border border-amber-400/40 text-[9.5px] font-bold text-amber-300 tracking-wider uppercase">
+                          <Camera className="w-2.5 h-2.5 text-amber-400" />
+                          <span>{destInfo.badge || '8K Ultra HD'}</span>
+                        </div>
+
+                        {isSelected && (
+                          <div className="absolute top-2.5 right-2.5 bg-[#B68D40] text-white p-1 rounded-full shadow-lg">
+                            <CheckCircle2 className="w-4 h-4" />
+                          </div>
+                        )}
+
+                        <div className="absolute bottom-2.5 left-3 right-3 text-white">
+                          <span className="font-bold text-base leading-tight block drop-shadow-sm font-serif">
+                            {destInfo.title || destination}
+                          </span>
+                          <span className="text-[10px] text-slate-200 line-clamp-1 font-light mt-0.5">
+                            {destInfo.tagline}
+                          </span>
+                        </div>
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
             </div>
           )}
@@ -1191,38 +1762,74 @@ Trekora Concierge Desk: support@travelindia.org | WhatsApp: +91 98765 43210
             </div>
           )}
 
-          {/* STEP 6: ACTIVITIES (SKIPPABLE) */}
+          {/* STEP 6: ACTIVITIES (8K PHOTOGRAPHIC EXPERIENCE CARDS) */}
           {step === 6 && (
             <div className="space-y-6">
               <div className="flex items-center justify-between rounded-[22px] border border-slate-200 bg-slate-50 px-4 py-3 text-slate-700">
                 <div className="flex items-center gap-3">
                   <Sparkles className="h-5 w-5 text-[#B68D40]" />
-                  <span className="text-sm font-medium">Select activities you wish to prioritize (or skip for general sightseeing).</span>
+                  <span className="text-sm font-medium">Select activities with verified 8K Ultra-HD photography (or skip for general sightseeing).</span>
                 </div>
                 <span className="text-xs text-emerald-700 bg-emerald-100 font-semibold px-2.5 py-0.5 rounded-full">
                   Optional
                 </span>
               </div>
 
-              <div className="grid gap-3 sm:grid-cols-2">
+              <div className="grid gap-4 sm:grid-cols-2">
                 {activityOptions.map((item) => {
+                  const meta = ACTIVITY_METADATA[item] || {};
                   const active = formData.activities.includes(item);
                   return (
-                    <button
-                      type="button"
+                    <div
                       key={item}
                       onClick={() => toggleActivity(item)}
-                      className={`rounded-[20px] border px-4 py-4 text-left text-base font-semibold transition ${
+                      className={`group relative overflow-hidden rounded-[22px] border text-left transition-all duration-300 cursor-pointer flex flex-col justify-between ${
                         active
-                          ? 'border-[#B68D40] bg-[#fff8eb] text-slate-900 shadow-[0_12px_24px_rgba(182,141,64,0.15)] ring-1 ring-[#B68D40]'
-                          : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300'
+                          ? 'border-[#B68D40] bg-[#fffcf7] ring-2 ring-[#B68D40] shadow-lg'
+                          : 'border-slate-200 bg-white hover:border-[#B68D40]/50 hover:shadow-md'
                       }`}
                     >
-                      <div className="flex items-center justify-between">
-                        <span>{item}</span>
-                        {active && <CheckCircle2 className="w-4 h-4 text-[#B68D40]" />}
+                      <div>
+                        {/* 8K Thumbnail */}
+                        <div className="relative h-36 w-full overflow-hidden bg-slate-900">
+                          <img
+                            src={meta.image}
+                            alt={meta.title || item}
+                            className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                            loading="lazy"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
+
+                          <div className="absolute top-2.5 left-2.5 flex items-center gap-1 bg-black/75 backdrop-blur-md px-2 py-0.5 rounded-full border border-amber-400/40 text-[9.5px] font-bold text-amber-300">
+                            <Camera className="w-2.5 h-2.5 text-amber-400" />
+                            <span>{meta.badge || '8K Ultra HD'}</span>
+                          </div>
+
+                          <div className="absolute top-2.5 right-2.5">
+                            <div className={`w-6 h-6 rounded-full flex items-center justify-center transition ${
+                              active ? 'bg-[#B68D40] text-white shadow-md' : 'bg-black/50 text-white/60 border border-white/30'
+                            }`}>
+                              {active ? <Check className="w-3.5 h-3.5" /> : <span className="w-2 h-2 rounded-full bg-white/40" />}
+                            </div>
+                          </div>
+
+                          <div className="absolute bottom-2 left-3 right-3 flex items-center justify-between text-white text-[11px]">
+                            <span className="font-medium text-amber-200">{meta.category}</span>
+                            <span className="text-white/80 text-[10px]">{meta.duration}</span>
+                          </div>
+                        </div>
+
+                        {/* Text */}
+                        <div className="p-3.5 space-y-1">
+                          <h4 className="font-serif font-bold text-slate-900 text-sm group-hover:text-[#B68D40] transition-colors">
+                            {meta.title || item}
+                          </h4>
+                          <p className="text-xs text-slate-500 font-light line-clamp-2">
+                            {meta.desc}
+                          </p>
+                        </div>
                       </div>
-                    </button>
+                    </div>
                   );
                 })}
               </div>
@@ -1342,14 +1949,20 @@ Trekora Concierge Desk: support@travelindia.org | WhatsApp: +91 98765 43210
         {/* Section Heading */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 border-b border-slate-200 pb-4">
           <div>
-            <span className="text-[10px] font-bold uppercase tracking-[0.24em] text-[#B68D40] block">
-              Curated Moments &amp; Highlights
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-serif text-slate-900 font-semibold mt-0.5">
-              Experiences of {formData.destination}
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-bold uppercase tracking-[0.24em] text-[#B68D40] block">
+                Visual Trip Explorer
+              </span>
+              <span className="flex items-center gap-1 bg-amber-500/15 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-500/30">
+                <Camera className="w-3 h-3 text-amber-600" />
+                8K Ultra-HD Gallery
+              </span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-serif text-slate-900 font-semibold mt-1">
+              8K Trip Highlights: {formData.destination}
             </h2>
             <p className="text-xs text-slate-500 font-light mt-0.5">
-              Handpicked authentic moments included or arranged by our Sarathi chauffeurs for this journey.
+              Explore authentic 8K Ultra-HD imagery captured along our private chauffeur routes. Click any card to inspect in full-resolution 8K Lightbox.
             </p>
           </div>
 
@@ -1370,46 +1983,96 @@ Trekora Concierge Desk: support@travelindia.org | WhatsApp: +91 98765 43210
           </div>
         </div>
 
-        {/* 3 Experience Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {currentExperiences.map((exp, idx) => (
+        {/* Visual Explorer Theme Filter Bar */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
+          {[
+            { id: 'all', label: 'All 8K Highlights' },
+            { id: 'mountain', label: 'Scenic Peaks & Passes' },
+            { id: 'heritage', label: 'Royal Living Heritage' },
+            { id: 'waterways', label: 'Lagoons, Lakes & Waters' },
+            { id: 'nature', label: 'Wild Rainforests & Safaris' },
+            { id: 'spiritual', label: 'Sacred Sanctums' }
+          ].map((thm) => (
+            <button
+              key={thm.id}
+              type="button"
+              onClick={() => setExplorerTheme(thm.id)}
+              className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition ${
+                explorerTheme === thm.id
+                  ? 'bg-[#131417] text-white shadow-xs'
+                  : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
+              }`}
+            >
+              {thm.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Experience Cards Grid in 8K Quality */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {filteredExperiences.map((exp, idx) => (
             <div
               key={idx}
-              className="group bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs hover:shadow-lg transition-all duration-300 flex flex-col justify-between"
+              className="group bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
             >
               <div>
                 {/* Image & Badge */}
-                <div className="relative h-44 w-full overflow-hidden bg-slate-100">
+                <div
+                  className="relative h-48 w-full overflow-hidden bg-slate-900 cursor-pointer"
+                  onClick={() => setActive8kImage({ ...exp, destination: formData.destination })}
+                >
                   <img
                     src={exp.image}
                     alt={exp.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                  <span className="absolute top-3 left-3 bg-[#131417]/85 backdrop-blur-xs text-[#E5C989] text-[10px] font-semibold tracking-wide px-2.5 py-1 rounded-md border border-[#E5C989]/30">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity" />
+                  
+                  {/* Category Tag */}
+                  <span className="absolute top-2.5 left-2.5 bg-[#131417]/85 backdrop-blur-xs text-[#E5C989] text-[9.5px] font-semibold tracking-wide px-2 py-0.5 rounded-md border border-[#E5C989]/30">
                     {exp.tag}
                   </span>
-                  <div className="absolute bottom-2.5 left-3 flex items-center gap-1 text-white text-xs">
-                    <Clock className="w-3.5 h-3.5 text-[#B68D40]" />
-                    <span className="text-[11px] font-medium">{exp.duration}</span>
+
+                  {/* 8K Resolution Badge Button */}
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActive8kImage({ ...exp, destination: formData.destination });
+                    }}
+                    className="absolute top-2.5 right-2.5 flex items-center gap-1 bg-black/80 backdrop-blur-md px-2 py-0.5 rounded-full border border-amber-400/40 text-[9.5px] font-bold text-amber-300 tracking-wider hover:bg-amber-500 hover:text-black transition shadow-sm"
+                    title="Click to view in 8K Ultra-HD Lightbox"
+                  >
+                    <Maximize2 className="w-2.5 h-2.5" />
+                    <span>{exp.resolutionBadge || '8K Ultra-HD'}</span>
+                  </button>
+
+                  <div className="absolute bottom-2.5 left-3 right-3 flex items-center justify-between text-white text-xs">
+                    <div className="flex items-center gap-1">
+                      <Clock className="w-3.5 h-3.5 text-[#B68D40]" />
+                      <span className="text-[11px] font-medium">{exp.duration}</span>
+                    </div>
+                    <span className="text-[10px] text-amber-300 font-semibold flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Eye className="w-3 h-3" /> Click 8K
+                    </span>
                   </div>
                 </div>
 
                 {/* Content */}
-                <div className="p-4 sm:p-5 space-y-2.5">
+                <div className="p-4 space-y-2">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1 text-amber-500">
                       <Star className="w-3.5 h-3.5 fill-current" />
                       <span className="text-xs font-bold text-slate-900">{exp.rating}</span>
                       <span className="text-[10px] text-slate-400 font-normal">({exp.reviews})</span>
                     </div>
-                    <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                      Verified
+                    <span className="text-[9.5px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                      Sarathi Verified
                     </span>
                   </div>
 
-                  <h3 className="font-bold text-slate-900 text-sm leading-snug group-hover:text-[#B68D40] transition-colors">
+                  <h3 className="font-bold text-slate-900 text-sm leading-snug group-hover:text-[#B68D40] transition-colors line-clamp-2">
                     {exp.title}
                   </h3>
                   <p className="text-xs text-slate-500 line-clamp-3 leading-relaxed">
@@ -1420,12 +2083,12 @@ Trekora Concierge Desk: support@travelindia.org | WhatsApp: +91 98765 43210
 
               {/* Chauffeur Insider Tip Strip */}
               <div className="p-4 pt-0">
-                <div className="p-3 bg-amber-50/70 rounded-xl border border-amber-200/60 text-[11px] text-amber-900 space-y-0.5">
-                  <span className="font-bold uppercase tracking-wider text-[9px] text-amber-800 block flex items-center gap-1">
+                <div className="p-2.5 bg-amber-50/70 rounded-xl border border-amber-200/60 text-[10.5px] text-amber-900 space-y-0.5">
+                  <span className="font-bold uppercase tracking-wider text-[9px] text-amber-800 flex items-center gap-1">
                     <Sparkles className="w-3 h-3 text-amber-600" />
                     Chauffeur Insider Tip
                   </span>
-                  <p className="text-slate-700 italic text-[11px]">
+                  <p className="text-slate-700 italic text-[10.5px] line-clamp-2">
                     "{exp.chauffeurTip}"
                   </p>
                 </div>
@@ -1474,7 +2137,178 @@ Trekora Concierge Desk: support@travelindia.org | WhatsApp: +91 98765 43210
             </button>
           </div>
         </div>
+
+        {/* 8K Highway Vistas & Scenic Route Halts */}
+        <div className="space-y-4 pt-6 border-t border-slate-200">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#B68D40] block">
+                Highway Vistas &amp; Chauffeur Halts
+              </span>
+              <span className="bg-amber-100 text-amber-800 text-[9.5px] font-bold px-2 py-0.5 rounded-full border border-amber-300 flex items-center gap-1">
+                <Camera className="w-3 h-3 text-amber-600" />
+                8K Panoramic Series
+              </span>
+            </div>
+            <span className="text-xs text-slate-400 font-mono hidden sm:inline">
+              Captured along private chauffeur routes
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {SCENIC_ROUTE_PANORAMAS.map((pano, pIdx) => (
+              <div
+                key={pIdx}
+                onClick={() => setActive8kImage({
+                  title: pano.title,
+                  image: pano.image,
+                  tag: pano.altitude,
+                  duration: pano.route,
+                  destination: pano.route.split('—')[0]?.trim() || formData.destination,
+                  resolutionBadge: pano.badge,
+                  desc: `Panoramic 8K Ultra-HD photography stop along ${pano.route}. Chauffeur stops on demand for pristine photography without rushing.`,
+                  chauffeurTip: `Optics: ${pano.camera}`
+                })}
+                className="group relative rounded-2xl overflow-hidden bg-slate-900 border border-slate-200 shadow-xs hover:shadow-xl transition-all duration-300 cursor-pointer h-44"
+              >
+                <img
+                  src={pano.image}
+                  alt={pano.title}
+                  className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+
+                <div className="absolute top-2.5 left-2.5 flex items-center gap-1 bg-black/75 backdrop-blur-md px-2 py-0.5 rounded-full border border-amber-400/40 text-[9.5px] font-bold text-amber-300">
+                  <Camera className="w-2.5 h-2.5 text-amber-400" />
+                  <span>{pano.badge}</span>
+                </div>
+
+                <div className="absolute top-2.5 right-2.5 text-white/70 group-hover:text-amber-300 transition">
+                  <Maximize2 className="w-3.5 h-3.5" />
+                </div>
+
+                <div className="absolute bottom-2.5 left-3 right-3 text-white text-left">
+                  <span className="text-[10px] text-amber-300/90 font-mono block">
+                    {pano.altitude} • {pano.route}
+                  </span>
+                  <h4 className="font-serif font-bold text-sm text-white leading-snug group-hover:text-amber-200 transition-colors line-clamp-1 mt-0.5">
+                    {pano.title}
+                  </h4>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
+
+      {/* 8K Ultra-HD Lightbox Viewer Modal */}
+      {active8kImage && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md p-4 sm:p-6"
+          onClick={() => setActive8kImage(null)}
+        >
+          <div
+            className="relative max-w-5xl w-full bg-[#131417] text-white rounded-3xl overflow-hidden border border-white/15 shadow-2xl animate-in fade-in zoom-in-95 duration-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Top Bar */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-black/50">
+              <div className="flex items-center gap-2.5">
+                <span className="flex items-center gap-1.5 bg-amber-500/20 text-amber-300 text-xs font-bold px-3 py-1 rounded-full border border-amber-500/40">
+                  <Camera className="w-3.5 h-3.5 text-amber-400" />
+                  <span>8K Ultra-HD Resolution • 7680×4320</span>
+                </span>
+                <span className="text-xs text-slate-400 hidden sm:inline">
+                  • {active8kImage.destination} Expedition
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setActive8kImage(null)}
+                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition"
+                aria-label="Close 8K Lightbox"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* High-Resolution 8K Image View with Prev/Next Controls */}
+            <div className="relative max-h-[62vh] w-full overflow-hidden bg-black flex items-center justify-center min-h-[320px]">
+              <img
+                src={active8kImage.image}
+                alt={active8kImage.title}
+                className="max-h-[62vh] w-full object-contain"
+              />
+
+              {/* Prev Button */}
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handlePrev8k();
+                }}
+                className="absolute left-3 top-1/2 -translate-y-1/2 p-2 sm:p-3 rounded-full bg-black/70 hover:bg-black/95 text-white border border-white/20 transition shadow-lg"
+                title="Previous 8K Photo"
+              >
+                <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+              </button>
+
+              {/* Next Button */}
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleNext8k();
+                }}
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-2 sm:p-3 rounded-full bg-black/70 hover:bg-black/95 text-white border border-white/20 transition shadow-lg"
+                title="Next 8K Photo"
+              >
+                <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
+              </button>
+
+              <span className="absolute bottom-3 right-4 bg-black/70 backdrop-blur-xs text-[10px] text-amber-300/90 font-mono px-2.5 py-1 rounded border border-white/10">
+                Prism Ultra-HD 8K Display
+              </span>
+            </div>
+
+            {/* Bottom Info Bar */}
+            <div className="p-6 bg-[#131417] border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="space-y-1 text-left">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-[#B68D40] font-semibold">{active8kImage.tag}</span>
+                  <span className="text-xs text-slate-400">• {active8kImage.duration}</span>
+                  <span className="text-xs text-emerald-400 font-medium">• 100% Direct Driver Pricing</span>
+                </div>
+                <h3 className="font-serif text-xl font-bold text-white leading-snug">
+                  {active8kImage.title}
+                </h3>
+                <p className="text-xs text-slate-300 max-w-2xl leading-relaxed">
+                  {active8kImage.desc}
+                </p>
+                {active8kImage.chauffeurTip && (
+                  <p className="text-[11px] text-amber-200/90 italic pt-1">
+                    "Sarathi Chauffeur Insider Tip: {active8kImage.chauffeurTip}"
+                  </p>
+                )}
+              </div>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setActive8kImage(null);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className="px-5 py-2.5 bg-[#B68D40] hover:bg-[#a77f34] text-white text-xs font-bold rounded-xl transition shrink-0 whitespace-nowrap shadow-md"
+              >
+                Plan Trip with this Experience
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

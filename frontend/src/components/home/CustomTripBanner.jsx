@@ -81,7 +81,7 @@ export default function CustomTripBanner() {
                 </div>
 
                 <div className="bg-white/5 rounded-xl p-3 border border-white/10 text-xs text-slate-300 italic">
-                  "We planned a 12-day Rajasthan & Varanasi private trip through NammaYathra. Every palace hotel, driver, and private monument entry was completely flawless!"
+                  "We planned a 12-day Rajasthan & Varanasi private trip through NammaYatra. Every palace hotel, driver, and private monument entry was completely flawless!"
                 </div>
 
                 <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1">

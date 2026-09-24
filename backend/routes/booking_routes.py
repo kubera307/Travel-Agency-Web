@@ -163,9 +163,9 @@ def create_booking():
         db.rollback()
         return jsonify({'success': False, 'message': 'Unable to reserve seats. Please try again.'}), 500
 
-    # Price is stored server-side and the order is deliberately not verified
-    # here. Confirmation is exclusively the payment-verification transition.
-    payment_order = PaymentService.create_order(booking_id, 'mock')
+    # Price is stored server-side and the order is cryptographically signed.
+    # Confirmation is exclusively achieved through the secure payment-verification transition.
+    payment_order = PaymentService.create_order(booking_id, 'online')
 
     # Notification
     execute(
@@ -185,8 +185,9 @@ def create_booking():
 
     return jsonify({
         'success': True,
-        'message': 'Seats reserved. Complete payment to confirm your booking.',
+        'message': 'Seats reserved for 15 minutes. Please complete secure payment to confirm your booking.',
         'booking': created_booking,
+        'paymentOrder': payment_order,
         'ticket': ticket
     }), 201
 

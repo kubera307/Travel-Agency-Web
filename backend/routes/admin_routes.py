@@ -168,6 +168,17 @@ def assign_driver(booking_id):
     )
     return jsonify({'success': True, 'message': 'Driver assigned successfully.'})
 
+@admin_bp.route('/bookings/<booking_id>/status', methods=['PUT'])
+def update_booking_status(booking_id):
+    data = request.get_json() or {}
+    status = (data.get('bookingStatus') or data.get('status') or '').upper().strip()
+    valid_statuses = ['PENDING', 'CONFIRMED', 'COMPLETED', 'CANCELLED']
+    if status not in valid_statuses:
+        return jsonify({'success': False, 'message': f'Invalid status. Must be one of: {", ".join(valid_statuses)}'}), 400
+
+    execute("UPDATE bookings SET booking_status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?", (status, booking_id))
+    return jsonify({'success': True, 'message': f'Booking status updated to {status}.'})
+
 @admin_bp.route('/customers', methods=['GET'])
 def list_customers():
     customers = query_all(
@@ -228,10 +239,53 @@ def list_reviews():
     )
     return jsonify({'success': True, 'data': reviews})
 
+@admin_bp.route('/reviews/<review_id>/moderate', methods=['PUT'])
 @admin_bp.route('/reviews/<review_id>/status', methods=['PUT'])
 def update_review_status(review_id):
     data = request.get_json() or {}
-    status = data.get('status') or 'APPROVED'
+    status = (data.get('status') or 'APPROVED').upper().strip()
     execute("UPDATE reviews SET status = ? WHERE id = ?", (status, review_id))
     return jsonify({'success': True, 'message': f'Review status updated to {status}.'})
+
+@admin_bp.route('/enquiries', methods=['GET'])
+def list_enquiries():
+    enquiries = query_all("SELECT * FROM enquiries ORDER BY created_at DESC")
+    return jsonify({'success': True, 'data': enquiries})
+
+@admin_bp.route('/enquiries/<enquiry_id>', methods=['PUT'])
+def update_enquiry_status(enquiry_id):
+    data = request.get_json() or {}
+    status = (data.get('status') or '').upper().strip()
+    valid_statuses = ['NEW', 'CONTACTED', 'IN_PROGRESS', 'RESOLVED', 'CLOSED']
+    if status not in valid_statuses:
+        return jsonify({'success': False, 'message': f'Invalid status. Must be one of: {", ".join(valid_statuses)}'}), 400
+
+    execute("UPDATE enquiries SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?", (status, enquiry_id))
+    return jsonify({'success': True, 'message': f'Enquiry status updated to {status}.'})
+
+@admin_bp.route('/feedback', methods=['GET'])
+def list_feedback():
+    feedbacks = query_all(
+        """SELECT f.*, b.booking_number, b.tour_title
+           FROM feedback f
+           LEFT JOIN bookings b ON f.booking_id = b.id
+           ORDER BY f.created_at DESC"""
+    )
+    return jsonify({'success': True, 'data': feedbacks})
+
+@admin_bp.route('/feedback/<feedback_id>/status', methods=['PUT'])
+def update_feedback_status(feedback_id):
+    data = request.get_json() or {}
+    status = (data.get('status') or 'REVIEWED').upper().strip()
+    admin_notes = (data.get('admin_notes') or '').strip()
+
+    if status not in ['PENDING', 'REVIEWED']:
+        return jsonify({'success': False, 'message': 'Status must be PENDING or REVIEWED.'}), 400
+
+    execute(
+        "UPDATE feedback SET status = ?, admin_notes = ? WHERE id = ?",
+        (status, admin_notes, feedback_id)
+    )
+    return jsonify({'success': True, 'message': f'Feedback marked as {status}.'})
+
 

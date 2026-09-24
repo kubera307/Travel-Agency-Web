@@ -32,7 +32,7 @@ export default function MobileMenu({
                 <Compass className="w-4 h-4" />
               </div>
               <span className="font-extrabold tracking-tight font-display text-slate-900">
-                NAMMAYATHRA
+                NammaYatra
               </span>
             </div>
             <button

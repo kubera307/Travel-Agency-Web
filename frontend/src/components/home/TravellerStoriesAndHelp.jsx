@@ -31,7 +31,7 @@ const TESTIMONIALS = [
     id: 3,
     name: 'Anita Desai',
     destination: 'Traveled to Rajasthan',
-    quote: '"Trekora made our family trip to Rajasthan so special. Great support throughout!"',
+    quote: '"NammaYatra made our family trip to Rajasthan so special. Great support throughout!"',
     rating: 5,
     avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=200&q=80'
   }
@@ -160,7 +160,7 @@ export default function TravellerStoriesAndHelp() {
               </a>
 
               <a
-                href="https://wa.me/919876543210?text=Hi%20Trekora!%20I%20would%20like%20assistance%20planning%20my%20journey."
+                href="https://wa.me/919876543210?text=Hi%20NammaYatra!%20I%20would%20like%20assistance%20planning%20my%20journey."
                 target="_blank"
                 rel="noreferrer"
                 className="flex flex-col items-center gap-1 group text-white/80 hover:text-white"
@@ -173,7 +173,7 @@ export default function TravellerStoriesAndHelp() {
               </a>
 
               <a
-                href="mailto:concierge@trekora.in"
+                href="mailto:concierge@nammayatra.in"
                 className="flex flex-col items-center gap-1 group text-white/80 hover:text-white"
                 title="Email our concierge"
               >

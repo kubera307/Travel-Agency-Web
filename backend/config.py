@@ -20,3 +20,9 @@ class Config:
     SUPPORT_EMAIL = os.getenv('SUPPORT_EMAIL', '')
     HELPLINE_NUMBER = os.getenv('BUSINESS_PHONE', '')
     WHATSAPP_NUMBER = os.getenv('WHATSAPP_NUMBER', '')
+
+    # Razorpay Gateway & Merchant UPI Settings
+    RAZORPAY_KEY_ID = os.getenv('RAZORPAY_KEY_ID', 'rzp_test_TRAVELINDIA101')
+    RAZORPAY_KEY_SECRET = os.getenv('RAZORPAY_KEY_SECRET', 'test_secret_travel_india_2026')
+    MERCHANT_UPI_VPA = os.getenv('MERCHANT_UPI_VPA', 'nammayatra.sarathi@icici')
+    MERCHANT_NAME = os.getenv('MERCHANT_NAME', 'NammaYatra Expeditions')

@@ -4,11 +4,11 @@ setlocal enabledelayedexpansion
 :: Ensure script runs in the directory of this batch file
 cd /d "%~dp0"
 
-TITLE Travel India - Professional Tour Booking Platform
+TITLE NammaYatra - Professional Tour Booking Platform
 COLOR 0A
 
 echo ======================================================================
-echo    TRAVEL INDIA - BHARAT OPEN MOBILITY ^& TOUR BOOKING PLATFORM
+echo    NAMMAYATRA - TOUR BOOKING & EXPERIENCES PLATFORM
 echo ======================================================================
 echo.
 echo Project Directory: %~dp0
@@ -33,21 +33,22 @@ if %errorlevel% neq 0 (
 )
 
 echo [1/2] Starting Python Flask Backend on Port 5000...
-start "Travel India Backend (Port 5000)" /D "%~dp0" cmd /k "python backend/app.py"
+start "NammaYatra Backend (Port 5000)" /D "%~dp0" cmd /k "python backend/app.py"
 
 echo.
 echo [2/2] Starting React Vite Frontend on Port 5173...
-start "Travel India Frontend (Port 5173)" /D "%~dp0" cmd /k "npm --prefix frontend run dev"
+start "NammaYatra Frontend (Port 5173)" /D "%~dp0" cmd /k "npm --prefix frontend run dev"
 
 echo.
 echo ======================================================================
-echo   Travel India is running successfully!
+echo   NammaYatra is running successfully!
 echo   Frontend : http://localhost:5173
+echo   Local IP : http://10.75.34.181:5173
 echo   Backend  : http://localhost:5000/api
 echo.
 echo   Demo Accounts:
 echo   - Customer : rahul@example.com / Customer@1234
-echo   - Admin    : admin@travelindia.com / Admin@1234
+echo   - Admin    : admin@nammayatra.com / Admin@1234
 echo ======================================================================
 echo.
 timeout /t 3 >nul

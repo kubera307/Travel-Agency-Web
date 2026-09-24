@@ -35,7 +35,7 @@ export default function WhyTravelWithUs() {
         {/* Section Title */}
         <div className="text-center max-w-2xl mx-auto mb-16 sm:mb-20">
           <span className="editorial-eyebrow">
-            The NAMMAYATHRA Distinction
+            The NammaYatra Distinction
           </span>
           <h2 className="editorial-title">
             Travel, thoughtfully.

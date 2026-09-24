@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Search, Heart, User, Menu, X, ChevronDown, ArrowRight, FileText, RotateCcw, ShieldCheck, PhoneCall, Info, HelpCircle } from 'lucide-react';
+import { Search, Heart, User, Menu, X, ChevronDown, ArrowRight, FileText, RotateCcw, ShieldCheck, PhoneCall, Info, HelpCircle, ExternalLink, MessageSquareHeart } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { useCurrency } from '../../context/CurrencyContext';
 import InfoPolicyModal from '../common/InfoPolicyModal';
 
-export function TrekoraLogoIcon({ className = "w-8 h-6" }) {
+export function NammayatraLogoIcon({ className = "w-8 h-6" }) {
   return (
     <svg className={className} viewBox="0 0 40 28" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M12 2L1 26H7.5L14 11.5L18.5 21L21.5 14.5L27 26H33.5L21.5 2L17 11.5L12 2Z" fill="#B68D40" />
@@ -14,6 +14,65 @@ export function TrekoraLogoIcon({ className = "w-8 h-6" }) {
     </svg>
   );
 }
+
+export const TRAVELER_INFO_ITEMS = [
+  {
+    id: 'terms',
+    label: 'Terms & Conditions',
+    desc: 'Sarathi driver code & booking rules',
+    path: '/terms',
+    icon: FileText,
+    accent: 'text-[#B68D40] bg-[#B68D40]/20 border-[#B68D40]/40'
+  },
+  {
+    id: 'cancellation',
+    label: 'Cancellation Policy',
+    desc: '100% free cancellation within 24h',
+    path: '/cancellation-policy',
+    icon: RotateCcw,
+    accent: 'text-emerald-400 bg-emerald-500/20 border-emerald-500/40'
+  },
+  {
+    id: 'privacy',
+    label: 'Privacy Policy',
+    desc: '256-bit SSL & zero data-sale pledge',
+    path: '/privacy-policy',
+    icon: ShieldCheck,
+    accent: 'text-sky-400 bg-sky-500/20 border-sky-500/40'
+  },
+  {
+    id: 'guide',
+    label: 'Booking & Luggage Guide',
+    desc: 'Vehicle capacities & luggage limits',
+    path: '/booking-guide',
+    icon: HelpCircle,
+    accent: 'text-amber-300 bg-amber-400/20 border-amber-400/40'
+  },
+  {
+    id: 'feedback',
+    label: 'Traveler Feedback',
+    desc: 'Rate your tour & share suggestions',
+    path: '/feedback',
+    icon: MessageSquareHeart,
+    accent: 'text-rose-400 bg-rose-500/20 border-rose-500/40'
+  },
+  {
+    id: 'contact',
+    label: 'Contact Info',
+    desc: '24x7 SOS helpline & WhatsApp concierge',
+    path: '/contact',
+    icon: PhoneCall,
+    accent: 'text-[#EAD8B1] bg-[#EAD8B1]/20 border-[#EAD8B1]/40'
+  },
+  {
+    id: 'about',
+    label: 'About Us',
+    desc: 'Our ethos & 0% middleman movement',
+    path: '/about',
+    icon: Info,
+    accent: 'text-[#B68D40] bg-[#B68D40]/20 border-[#B68D40]/40'
+  }
+];
 
 export default function LuxuryNavbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -64,7 +123,7 @@ export default function LuxuryNavbar() {
   const navLinks = [
     { name: 'Discover', href: '/' },
     { name: 'Destinations', href: '/destinations' },
-    { name: 'Experiences', href: '/tours?category=wellness' },
+    { name: 'Experiences', href: '/experiences' },
     { name: 'Tours', href: '/tours' },
     { name: 'Plan Trip', href: '/custom-trip-planner' },
     { name: 'About', href: '/about' }
@@ -89,12 +148,12 @@ export default function LuxuryNavbar() {
       <header className={`fixed top-0 left-0 right-0 z-40 h-[72px] transition-all duration-300 ${headerBg}`}>
         <div className="max-w-7xl mx-auto h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           
-          {/* LEFT: Trekora Brand Logo */}
+          {/* LEFT: NammaYatra Brand Logo */}
           <Link to="/" className="flex items-center gap-2.5 group text-left">
-            <TrekoraLogoIcon className="w-8 h-6 text-[#B68D40] group-hover:scale-105 transition-transform" />
+            <NammayatraLogoIcon className="w-8 h-6 text-[#B68D40] group-hover:scale-105 transition-transform" />
             <div className="flex flex-col">
-              <span className="text-xl sm:text-[22px] tracking-tight font-semibold text-white group-hover:text-[#B68D40] transition-colors leading-none">
-                Trekora
+              <span className="text-xl sm:text-[22px] tracking-tight font-semibold text-white group-hover:text-[#B68D40] transition-colors leading-none font-serif">
+                NammaYatra
               </span>
               <span className="text-[7.5px] tracking-[0.26em] font-sans uppercase text-[#B68D40] font-medium mt-1">
                 Explore India Differently
@@ -268,91 +327,61 @@ export default function LuxuryNavbar() {
 
               {/* Dropdown Box */}
               {infoDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-64 bg-[#14161C]/95 border border-[#B68D40]/35 rounded-xl shadow-2xl py-2 z-50 text-left backdrop-blur-md">
-                  <div className="px-3.5 py-2 border-b border-white/10 flex items-center justify-between">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#B68D40]">
-                      Traveler Information
-                    </span>
-                    <span className="text-[9px] text-white/50">Trekora Desk</span>
+                <div
+                  style={{ backgroundColor: '#12141A' }}
+                  className="absolute right-0 mt-2.5 w-[330px] sm:w-[350px] bg-[#12141A] border border-[#B68D40]/45 rounded-2xl shadow-[0_25px_60px_rgba(0,0,0,0.95)] py-2 z-50 text-left animate-in fade-in duration-150 overflow-hidden"
+                >
+                  <div className="px-4 py-3 border-b border-white/10 flex items-center justify-between bg-white/[0.03]">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-[#B68D40] animate-pulse"></span>
+                      <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#B68D40]">
+                        Traveler Information
+                      </span>
+                    </div>
+                    <span className="text-[10px] font-mono text-[#FAF8F5]/60 tracking-wider uppercase">Travel India Desk</span>
                   </div>
-                  <div className="py-1">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setSelectedPolicyTab('terms');
-                        setPolicyModalOpen(true);
-                        setInfoDropdownOpen(false);
-                      }}
-                      className="w-full text-left px-3.5 py-2 text-xs text-white/90 hover:text-white hover:bg-white/10 flex items-center gap-2.5 transition"
-                    >
-                      <FileText className="w-4 h-4 text-[#B68D40] shrink-0" />
-                      <span>Terms &amp; Conditions</span>
-                    </button>
 
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setSelectedPolicyTab('cancellation');
-                        setPolicyModalOpen(true);
-                        setInfoDropdownOpen(false);
-                      }}
-                      className="w-full text-left px-3.5 py-2 text-xs text-white/90 hover:text-white hover:bg-white/10 flex items-center gap-2.5 transition"
-                    >
-                      <RotateCcw className="w-4 h-4 text-emerald-400 shrink-0" />
-                      <span>Cancellation Policy</span>
-                    </button>
+                  <div className="p-2 space-y-1">
+                    {TRAVELER_INFO_ITEMS.map((item) => {
+                      const Icon = item.icon;
+                      return (
+                        <Link
+                          key={item.id}
+                          to={item.path}
+                          onClick={() => setInfoDropdownOpen(false)}
+                          className="group/item flex items-center justify-between rounded-xl px-3.5 py-2.5 text-xs border border-transparent hover:border-[#B68D40]/30 hover:bg-[#B68D40]/15 transition-all duration-200 cursor-pointer"
+                        >
+                          <div className="flex items-center gap-3 min-w-0 pr-2">
+                            <span className={`w-8 h-8 rounded-xl flex items-center justify-center border shrink-0 transition-transform duration-200 group-hover/item:scale-105 group-hover/item:shadow-sm ${item.accent}`}>
+                              <Icon className="w-4 h-4" />
+                            </span>
+                            <div className="min-w-0">
+                              <p className="font-serif text-[15px] font-medium text-[#FAF8F5] tracking-wide group-hover/item:text-[#B68D40] transition-colors leading-snug">
+                                {item.label}
+                              </p>
+                              <p className="text-[11px] text-[#FAF8F5]/75 font-sans font-light tracking-normal truncate leading-normal mt-0.5 group-hover/item:text-[#FAF8F5]/95">
+                                {item.desc}
+                              </p>
+                            </div>
+                          </div>
+                          <ArrowRight className="w-4 h-4 text-[#B68D40]/60 group-hover/item:text-[#B68D40] group-hover/item:translate-x-1 transition-all shrink-0" />
+                        </Link>
+                      );
+                    })}
+                  </div>
 
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setSelectedPolicyTab('privacy');
-                        setPolicyModalOpen(true);
-                        setInfoDropdownOpen(false);
-                      }}
-                      className="w-full text-left px-3.5 py-2 text-xs text-white/90 hover:text-white hover:bg-white/10 flex items-center gap-2.5 transition"
+                  <div className="px-4 py-2.5 border-t border-white/10 bg-white/[0.03] flex items-center justify-between text-[11px]">
+                    <span className="flex items-center gap-1.5 text-emerald-400 font-medium">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                      Direct Driver Pricing
+                    </span>
+                    <Link
+                      to="/contact"
+                      onClick={() => setInfoDropdownOpen(false)}
+                      className="text-[#B68D40] hover:text-[#EAD8B1] font-serif font-semibold text-xs tracking-wide hover:underline transition-colors"
                     >
-                      <ShieldCheck className="w-4 h-4 text-blue-400 shrink-0" />
-                      <span>Privacy Policy</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setSelectedPolicyTab('guide');
-                        setPolicyModalOpen(true);
-                        setInfoDropdownOpen(false);
-                      }}
-                      className="w-full text-left px-3.5 py-2 text-xs text-white/90 hover:text-white hover:bg-white/10 flex items-center gap-2.5 transition"
-                    >
-                      <HelpCircle className="w-4 h-4 text-teal-400 shrink-0" />
-                      <span>Booking &amp; Luggage Guide</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setSelectedPolicyTab('contact');
-                        setPolicyModalOpen(true);
-                        setInfoDropdownOpen(false);
-                      }}
-                      className="w-full text-left px-3.5 py-2 text-xs text-white/90 hover:text-white hover:bg-white/10 flex items-center gap-2.5 transition"
-                    >
-                      <PhoneCall className="w-4 h-4 text-[#B68D40] shrink-0" />
-                      <span>Contact Info</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setSelectedPolicyTab('about');
-                        setPolicyModalOpen(true);
-                        setInfoDropdownOpen(false);
-                      }}
-                      className="w-full text-left px-3.5 py-2 text-xs text-white/90 hover:text-white hover:bg-white/10 flex items-center gap-2.5 transition"
-                    >
-                      <Info className="w-4 h-4 text-amber-300 shrink-0" />
-                      <span>About Us</span>
-                    </button>
+                      Helpline: 1800-BHARAT
+                    </Link>
                   </div>
                 </div>
               )}
@@ -378,9 +407,9 @@ export default function LuxuryNavbar() {
             <div className="space-y-6">
               <div className="flex items-center justify-between pb-4 border-b border-white/10">
                 <div className="flex items-center gap-2">
-                  <TrekoraLogoIcon className="w-7 h-5 text-[#B68D40]" />
-                  <span className="font-semibold text-lg tracking-tight text-white">
-                    Trekora
+                  <NammayatraLogoIcon className="w-7 h-5 text-[#B68D40]" />
+                  <span className="font-semibold text-lg tracking-tight text-white font-serif">
+                    NammaYatra
                   </span>
                 </div>
                 <button
@@ -431,66 +460,40 @@ export default function LuxuryNavbar() {
                   </Link>
                 )}
               </div>
-              <div className="pt-4 border-t border-white/10 space-y-2 text-left">
-                <p className="text-[10px] font-bold uppercase tracking-wider text-[#B68D40]">
-                  Policies &amp; Assistance
-                </p>
-                <div className="grid grid-cols-2 gap-2 text-xs text-white/80">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      setSelectedPolicyTab('terms');
-                      setPolicyModalOpen(true);
-                    }}
-                    className="p-2 rounded bg-white/5 hover:bg-white/10 text-left"
-                  >
-                    Terms &amp; Cond.
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      setSelectedPolicyTab('cancellation');
-                      setPolicyModalOpen(true);
-                    }}
-                    className="p-2 rounded bg-white/5 hover:bg-white/10 text-left"
-                  >
-                    Cancellation
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      setSelectedPolicyTab('privacy');
-                      setPolicyModalOpen(true);
-                    }}
-                    className="p-2 rounded bg-white/5 hover:bg-white/10 text-left"
-                  >
-                    Privacy Policy
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      setSelectedPolicyTab('contact');
-                      setPolicyModalOpen(true);
-                    }}
-                    className="p-2 rounded bg-white/5 hover:bg-white/10 text-left"
-                  >
-                    Contact Info
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      setSelectedPolicyTab('guide');
-                      setPolicyModalOpen(true);
-                    }}
-                    className="p-2 rounded bg-white/5 hover:bg-white/10 text-left col-span-2 text-teal-300 font-medium"
-                  >
-                    💡 Booking &amp; Luggage Guide
-                  </button>
+              <div className="pt-4 border-t border-white/10 space-y-2.5 text-left">
+                <div className="flex items-center justify-between">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#B68D40]">
+                    Traveler Information &amp; Policies
+                  </p>
+                  <span className="text-[10px] font-mono text-[#FAF8F5]/60 uppercase">Travel India Desk</span>
+                </div>
+                <div className="grid grid-cols-1 gap-2 text-xs text-white/90">
+                  {TRAVELER_INFO_ITEMS.map((item) => {
+                    const Icon = item.icon;
+                    return (
+                      <Link
+                        key={item.id}
+                        to={item.path}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="flex items-center justify-between p-2.5 rounded-xl bg-white/[0.04] hover:bg-[#B68D40]/15 border border-transparent hover:border-[#B68D40]/30 transition group"
+                      >
+                        <div className="flex items-center gap-3 min-w-0 pr-2">
+                          <span className={`w-7 h-7 rounded-lg flex items-center justify-center border shrink-0 ${item.accent}`}>
+                            <Icon className="w-3.5 h-3.5" />
+                          </span>
+                          <div className="min-w-0">
+                            <span className="font-serif text-[15px] font-normal text-[#FAF8F5] group-hover:text-[#B68D40] block leading-snug">
+                              {item.label}
+                            </span>
+                            <span className="text-[11px] text-[#FAF8F5]/65 font-light block truncate mt-0.5">
+                              {item.desc}
+                            </span>
+                          </div>
+                        </div>
+                        <ArrowRight className="w-4 h-4 text-[#B68D40]/60 group-hover:text-[#B68D40] group-hover:translate-x-0.5 transition-all shrink-0" />
+                      </Link>
+                    );
+                  })}
                 </div>
               </div>
             </div>

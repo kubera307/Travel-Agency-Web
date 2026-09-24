@@ -36,7 +36,7 @@ function Logo({ light = false }) {
         <Compass className="h-[18px] w-[18px]" strokeWidth={1.8} />
       </span>
       <span className="flex flex-col leading-none">
-        <span className={`text-[16px] font-extrabold tracking-[-0.075em] ${light ? 'text-white' : 'text-[#102039]'}`}>NAMMAYATHRA</span>
+        <span className={`text-[16px] font-extrabold tracking-[-0.075em] ${light ? 'text-white' : 'text-[#102039]'}`}>NammaYatra</span>
         <span className="mt-1.5 text-[8px] font-bold uppercase tracking-[0.24em] text-[#d97706]">Curated escapes</span>
       </span>
     </span>
@@ -129,7 +129,7 @@ export default function Navbar() {
       <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-5 lg:px-7">
         <div className={`mx-auto max-w-[1400px] rounded-[20px] border px-3 transition-all duration-300 sm:px-5 ${shell}`}>
           <div className="flex min-h-[68px] items-center justify-between gap-4 xl:grid xl:grid-cols-[1fr_auto_1fr]">
-            <Link to="/" aria-label="NammaYathra home" onClick={closeMenus} className="shrink-0"><Logo light={isOverlay} /></Link>
+            <Link to="/" aria-label="NammaYatra home" onClick={closeMenus} className="shrink-0"><Logo light={isOverlay} /></Link>
 
             <nav aria-label="Primary navigation" className="hidden items-center gap-5 xl:flex">
               {navLinks.map((link) => {

@@ -14,7 +14,7 @@ const DEFAULT_FAQS = [
       'Yes, entirely. We specialize in bespoke private departures. You may alter daily pacing, add private wildlife game drives, request royal suite upgrades, or extend time in your favorite mountain or backwater sanctuaries.'
   },
   {
-    question: 'What is included in a NAMMAYATHRA journey?',
+    question: 'What is included in a NammaYatra journey?',
     answer:
       'All boutique luxury accommodations, private climate-controlled transport with certified chauffeurs, all breakfast and select curated regional dinners, monument entrance permits, and private regional historians. There are zero hidden surcharges.'
   },

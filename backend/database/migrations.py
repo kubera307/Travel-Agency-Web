@@ -1,4 +1,4 @@
-"""Database migrations and schema initialization for NAMMAYATHRA Platform."""
+"""Database migrations and schema initialization for NammaYatra Platform."""
 import time
 from database.db import get_db
 

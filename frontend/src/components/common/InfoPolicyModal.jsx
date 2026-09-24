@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
   X,
   FileText,
@@ -24,12 +25,12 @@ import { useToast } from '../../context/ToastContext';
 import { api } from '../../utils/api';
 
 export const INFO_SECTIONS = [
-  { id: 'terms', label: 'Terms & Conditions', shortLabel: 'Terms', icon: FileText },
-  { id: 'cancellation', label: 'Cancellation Policy', shortLabel: 'Cancellation', icon: RotateCcw },
-  { id: 'privacy', label: 'Privacy Policy', shortLabel: 'Privacy', icon: ShieldCheck },
-  { id: 'guide', label: 'Booking & Luggage Guide', shortLabel: 'Guide & Luggage', icon: HelpCircle },
-  { id: 'contact', label: 'Contact Info', shortLabel: 'Contact', icon: PhoneCall },
-  { id: 'about', label: 'About Us', shortLabel: 'About Us', icon: Info },
+  { id: 'terms', label: 'Terms & Conditions', shortLabel: 'Terms', icon: FileText, path: '/terms' },
+  { id: 'cancellation', label: 'Cancellation Policy', shortLabel: 'Cancellation', icon: RotateCcw, path: '/cancellation-policy' },
+  { id: 'privacy', label: 'Privacy Policy', shortLabel: 'Privacy', icon: ShieldCheck, path: '/privacy-policy' },
+  { id: 'guide', label: 'Booking & Luggage Guide', shortLabel: 'Guide & Luggage', icon: HelpCircle, path: '/booking-guide' },
+  { id: 'contact', label: 'Contact Info', shortLabel: 'Contact', icon: PhoneCall, path: '/contact' },
+  { id: 'about', label: 'About Us', shortLabel: 'About Us', icon: Info, path: '/about' },
 ];
 
 export default function InfoPolicyModal({ isOpen, onClose, initialTab = 'terms' }) {
@@ -140,14 +141,25 @@ export default function InfoPolicyModal({ isOpen, onClose, initialTab = 'terms' 
               </div>
             </div>
 
-            <button
-              type="button"
-              onClick={onClose}
-              className="rounded-full p-2 text-white/60 hover:text-white hover:bg-white/10 transition-colors"
-              aria-label="Close dialog"
-            >
-              <X className="w-5 h-5" />
-            </button>
+            <div className="flex items-center gap-2">
+              <Link
+                to={INFO_SECTIONS.find((s) => s.id === activeTab)?.path || '/terms'}
+                onClick={onClose}
+                className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-[#B68D40]/20 border border-white/10 hover:border-[#B68D40]/40 text-xs font-medium text-white/80 hover:text-white transition"
+                title="Open dedicated full page"
+              >
+                <span>Full Page</span>
+                <ExternalLink className="w-3.5 h-3.5 text-[#B68D40]" />
+              </Link>
+              <button
+                type="button"
+                onClick={onClose}
+                className="rounded-full p-2 text-white/60 hover:text-white hover:bg-white/10 transition-colors"
+                aria-label="Close dialog"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
           </div>
 
           {/* Navigation Tabs Bar */}
@@ -182,7 +194,7 @@ export default function InfoPolicyModal({ isOpen, onClose, initialTab = 'terms' 
                 <div className="p-4 rounded-xl bg-white/5 border border-white/10 flex items-start gap-3">
                   <CheckCircle2 className="w-5 h-5 text-[#B68D40] shrink-0 mt-0.5" />
                   <p className="text-xs text-white/90">
-                    Welcome to <strong>Trekora (NammaYathra)</strong>. All tour bookings, private journeys, and transport services are governed by the transparent, fair-practice tourism standards outlined below.
+                    Welcome to <strong>NammaYatra</strong>. All tour bookings, private journeys, and transport services are governed by the transparent, fair-practice tourism standards outlined below.
                   </p>
                 </div>
 
@@ -325,7 +337,7 @@ export default function InfoPolicyModal({ isOpen, onClose, initialTab = 'terms' 
                 <div className="p-4 rounded-xl bg-white/5 border border-white/10 flex items-start gap-3">
                   <ShieldCheck className="w-5 h-5 text-[#B68D40] shrink-0 mt-0.5" />
                   <p className="text-xs text-white/90">
-                    At Trekora, your privacy is sacred. We maintain a zero-tolerance policy against commercializing user information with advertising exchanges or insurers.
+                    At NammaYatra, your privacy is sacred. We maintain a zero-tolerance policy against commercializing user information with advertising exchanges or insurers.
                   </p>
                 </div>
 
@@ -461,7 +473,7 @@ export default function InfoPolicyModal({ isOpen, onClose, initialTab = 'terms' 
                   </a>
 
                   <a
-                    href="https://wa.me/919876543210?text=Hi%20Trekora!%20I%20need%20assistance%20regarding%20my%20trip."
+                    href="https://wa.me/919876543210?text=Hi%20NammaYatra!%20I%20need%20assistance%20regarding%20my%20trip."
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-4 rounded-xl bg-[#1C1F26] border border-white/10 hover:border-emerald-500/50 transition group flex flex-col justify-between"
@@ -583,10 +595,10 @@ export default function InfoPolicyModal({ isOpen, onClose, initialTab = 'terms' 
                     Our Story &amp; Movement
                   </span>
                   <h3 className="text-base font-semibold text-white">
-                    Trekora &amp; NammaYathra — Redefining Indian Journeys
+                    NammaYatra — Redefining Indian Journeys
                   </h3>
                   <p className="text-xs text-slate-300 leading-relaxed">
-                    Trekora is an open-mobility tourism network inspired by community-first platforms like Namma Yatri in Bengaluru and Mana Yatri in Hyderabad. We cut out exploitative 30% middleman aggregators, passing 100% of tour base fares directly to verified Sarathi chauffeurs.
+                    NammaYatra is an open-mobility tourism network inspired by community-first platforms like Namma Yatri in Bengaluru and Mana Yatri in Hyderabad. We cut out exploitative 30% middleman aggregators, passing 100% of tour base fares directly to verified Sarathi chauffeurs.
                   </p>
                 </div>
 
@@ -616,7 +628,7 @@ export default function InfoPolicyModal({ isOpen, onClose, initialTab = 'terms' 
                     Sarathi Family Welfare &amp; Safety Foundation
                   </h4>
                   <p className="text-xs text-slate-300 leading-relaxed">
-                    Every journey booked through Trekora funds comprehensive family health coverage, accidental insurance, and annual educational scholarships for children of our driver partners. Traveling with us honors the dignity of local labor.
+                    Every journey booked through NammaYatra funds comprehensive family health coverage, accidental insurance, and annual educational scholarships for children of our driver partners. Traveling with us honors the dignity of local labor.
                   </p>
                 </div>
               </div>

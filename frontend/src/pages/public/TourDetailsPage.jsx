@@ -30,6 +30,7 @@ import {
   Square,
   ChevronDown,
   MessageSquare,
+  MessageCircle,
   Send
 } from 'lucide-react';
 
@@ -635,7 +636,7 @@ export default function TourDetailsPage() {
 
               <button
                 onClick={() => {
-                  const msg = encodeURIComponent(`Hi NammaYathra! I want to book: ${tour.title} (${formatPrice(tour.sale_price)}). Please assist.`);
+                  const msg = encodeURIComponent(`Hi NammaYatra! I want to book: ${tour.title} (${formatPrice(tour.sale_price)}). Please assist.`);
                   window.open(`https://wa.me/919876543210?text=${msg}`, '_blank');
                 }}
                 className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-2xl shadow-md transition-all flex items-center justify-center gap-2"
@@ -670,7 +671,7 @@ export default function TourDetailsPage() {
         <div className="flex items-center gap-2">
           <button
             onClick={() => {
-              const msg = encodeURIComponent(`Hi NammaYathra! I want to book: ${tour.title} (${formatPrice(tour.sale_price)}). Please assist.`);
+              const msg = encodeURIComponent(`Hi NammaYatra! I want to book: ${tour.title} (${formatPrice(tour.sale_price)}). Please assist.`);
               window.open(`https://wa.me/919876543210?text=${msg}`, '_blank');
             }}
             className="bg-emerald-600 hover:bg-emerald-700 text-white p-2.5 rounded-xl shadow-md"

@@ -27,7 +27,7 @@ export const TRANSLATIONS = {
     search_category: "Tour Category",
     search_budget: "Budget",
     search_btn: "Search Tours",
-    footer_rights: "© 2026 NammaYathra. Built with pride for Bharat 🇮🇳."
+    footer_rights: "© 2026 NammaYatra. Built with pride for Bharat 🇮🇳."
   },
   kn: {
     top_announcement: "ಚಾಲಕರಿಗೆ ಶೂನ್ಯ ಕಮಿಷನ್ • 100% ನೇರ ಚಾಲಕರ ಪಾವತಿ • ONDC ನೆಟ್‌ವರ್ಕ್ ಬೆಂಬಲಿತ",

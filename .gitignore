@@ -32,3 +32,7 @@ yarn-error.log*
 .DS_Store
 Thumbs.db
 .vscode/
+cloudflared.exe
+scratch_*
+user_prompt_*
+

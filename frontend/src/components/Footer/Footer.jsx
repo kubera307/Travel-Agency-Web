@@ -27,7 +27,7 @@ export default function Footer() {
                 <Compass className="h-5 w-5" />
               </div>
               <div className="leading-none text-left">
-                <div className="text-2xl font-extrabold tracking-[-0.08em]">NAMMAYATHRA</div>
+                <div className="text-2xl font-extrabold tracking-[-0.08em]">NammaYatra</div>
                 <div className="mt-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#f3b96a]">curated escapes</div>
               </div>
             </Link>
@@ -55,7 +55,7 @@ export default function Footer() {
             <ul className="mt-5 space-y-3 text-sm text-slate-300">
               <li><Link to="/tours" className="hover:text-white">Tours</Link></li>
               <li><Link to="/destinations" className="hover:text-white">Destinations</Link></li>
-              <li><Link to="/custom-trip-planner" className="hover:text-white">Experiences</Link></li>
+              <li><Link to="/experiences" className="hover:text-white">Experiences</Link></li>
               <li><Link to="/offers" className="hover:text-white">Offers</Link></li>
             </ul>
           </div>
@@ -94,7 +94,7 @@ export default function Footer() {
             <span>Trusted by travellers across India</span>
           </div>
           <div className="flex items-center gap-3">
-            <span>© 2026 NammaYathra</span>
+            <span>© 2026 NammaYatra</span>
             <span className="hidden h-1 w-1 rounded-full bg-slate-600 md:block" />
             <span>{destinations.slice(0, 3).join(' • ')}</span>
           </div>

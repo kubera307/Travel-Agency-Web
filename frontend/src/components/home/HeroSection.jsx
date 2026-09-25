@@ -1,26 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import { ArrowRight, MapPin, Compass, Users, Star, Gift, FileText, RotateCcw, ShieldCheck, PhoneCall, Info, HelpCircle, ExternalLink } from 'lucide-react';
-import { useAuth } from '../../context/AuthContext';
-import InfoPolicyModal from '../common/InfoPolicyModal';
-import { TRAVELER_INFO_ITEMS } from '../Navbar/LuxuryNavbar';
+import React from 'react';
+import { ArrowRight, MapPin, Compass, Users, Star, Gift } from 'lucide-react';
 
 export default function HeroSection({ onExploreClick }) {
-  const { isAuthenticated } = useAuth();
-  const [heroDropdownOpen, setHeroDropdownOpen] = useState(false);
-  const [policyModalOpen, setPolicyModalOpen] = useState(false);
-  const [selectedPolicyTab, setSelectedPolicyTab] = useState('terms');
-  const heroDropdownRef = useRef(null);
-
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (heroDropdownRef.current && !heroDropdownRef.current.contains(e.target)) {
-        setHeroDropdownOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
   return (
     <section className="relative min-h-[90vh] sm:min-h-[94vh] flex flex-col justify-between pt-28 pb-24 sm:pb-28 overflow-hidden text-white bg-slate-950">
@@ -69,95 +50,6 @@ export default function HeroSection({ onExploreClick }) {
                 <span>Explore Tours</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
-
-              <Link
-                to={isAuthenticated ? "/custom-trip-planner" : "/login?redirect=/custom-trip-planner"}
-                className="inline-flex items-center gap-2 bg-black/25 hover:bg-black/40 text-white border border-white/30 px-6 py-2.5 sm:px-7 sm:py-3 text-xs font-medium rounded-md transition duration-200 backdrop-blur-xs"
-              >
-                <span>Book My Trip</span>
-              </Link>
-
-              {/* 3-Line Drop Box next to Book My Trip */}
-              <div className="relative" ref={heroDropdownRef}>
-                <button
-                  type="button"
-                  onClick={() => setHeroDropdownOpen(!heroDropdownOpen)}
-                  className={`inline-flex items-center justify-center p-2.5 sm:p-3 rounded-md transition duration-200 border backdrop-blur-xs shadow-md ${
-                    heroDropdownOpen
-                      ? 'bg-[#B68D40] border-[#B68D40] text-white'
-                      : 'bg-black/35 hover:bg-black/60 border-white/30 text-white'
-                  }`}
-                  title="Terms, Policies &amp; Company Info"
-                  aria-label="3-line drop box"
-                >
-                  <div className="flex flex-col justify-center items-center gap-[3.5px] w-4">
-                    <span className="w-4 h-[2px] bg-white rounded-full"></span>
-                    <span className="w-4 h-[2px] bg-white rounded-full"></span>
-                    <span className="w-4 h-[2px] bg-white rounded-full"></span>
-                  </div>
-                </button>
-
-                {/* Dropdown Menu */}
-                {heroDropdownOpen && (
-                  <div
-                    style={{ backgroundColor: '#12141A' }}
-                    className="absolute left-0 sm:left-auto sm:right-0 mt-2.5 w-[330px] sm:w-[350px] bg-[#12141A] border border-[#B68D40]/45 rounded-2xl shadow-[0_25px_60px_rgba(0,0,0,0.95)] py-2 z-50 text-left animate-in fade-in duration-150 overflow-hidden"
-                  >
-                    <div className="px-4 py-3 border-b border-white/10 flex items-center justify-between bg-white/[0.03]">
-                      <div className="flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-[#B68D40] animate-pulse"></span>
-                        <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#B68D40]">
-                          Traveler Information
-                        </span>
-                      </div>
-                      <span className="text-[10px] font-mono text-[#FAF8F5]/60 tracking-wider uppercase">Travel India Desk</span>
-                    </div>
-
-                    <div className="p-2 space-y-1">
-                      {TRAVELER_INFO_ITEMS.map((item) => {
-                        const Icon = item.icon;
-                        return (
-                          <Link
-                            key={item.id}
-                            to={item.path}
-                            onClick={() => setHeroDropdownOpen(false)}
-                            className="group/item flex items-center justify-between rounded-xl px-3.5 py-2.5 text-xs border border-transparent hover:border-[#B68D40]/30 hover:bg-[#B68D40]/15 transition-all duration-200 cursor-pointer"
-                          >
-                            <div className="flex items-center gap-3 min-w-0 pr-2">
-                              <span className={`w-8 h-8 rounded-xl flex items-center justify-center border shrink-0 transition-transform duration-200 group-hover/item:scale-105 group-hover/item:shadow-sm ${item.accent}`}>
-                                <Icon className="w-4 h-4" />
-                              </span>
-                              <div className="min-w-0">
-                                <p className="font-serif text-[15px] font-medium text-[#FAF8F5] tracking-wide group-hover/item:text-[#B68D40] transition-colors leading-snug">
-                                  {item.label}
-                                </p>
-                                <p className="text-[11px] text-[#FAF8F5]/75 font-sans font-light tracking-normal truncate leading-normal mt-0.5 group-hover/item:text-[#FAF8F5]/95">
-                                  {item.desc}
-                                </p>
-                              </div>
-                            </div>
-                            <ArrowRight className="w-4 h-4 text-[#B68D40]/60 group-hover/item:text-[#B68D40] group-hover/item:translate-x-1 transition-all shrink-0" />
-                          </Link>
-                        );
-                      })}
-                    </div>
-
-                    <div className="px-4 py-2.5 border-t border-white/10 bg-white/[0.03] flex items-center justify-between text-[11px]">
-                      <span className="flex items-center gap-1.5 text-emerald-400 font-medium">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                        Direct Driver Pricing
-                      </span>
-                      <Link
-                        to="/contact"
-                        onClick={() => setHeroDropdownOpen(false)}
-                        className="text-[#B68D40] hover:text-[#EAD8B1] font-serif font-semibold text-xs tracking-wide hover:underline transition-colors"
-                      >
-                        Helpline: 1800-BHARAT
-                      </Link>
-                    </div>
-                  </div>
-                )}
-              </div>
             </div>
           </div>
 
@@ -227,13 +119,6 @@ export default function HeroSection({ onExploreClick }) {
           </div>
         </div>
       </div>
-
-      {/* Information & Policy Display Modal */}
-      <InfoPolicyModal
-        isOpen={policyModalOpen}
-        onClose={() => setPolicyModalOpen(false)}
-        initialTab={selectedPolicyTab}
-      />
     </section>
   );
 }

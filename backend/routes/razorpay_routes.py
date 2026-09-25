@@ -4,8 +4,11 @@ import hmac
 import hashlib
 from datetime import datetime, timezone
 from flask import Blueprint, request, jsonify, g
-import razorpay
 from config import Config
+try:
+    import razorpay
+except ImportError:
+    razorpay = None
 from database.db import query_one, query_all, execute
 from middleware.auth import jwt_required, admin_required
 from services.ticket_service import generate_ticket

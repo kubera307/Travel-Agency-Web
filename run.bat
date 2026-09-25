@@ -32,6 +32,12 @@ if %errorlevel% neq 0 (
     exit /b 1
 )
 
+:: Ensure frontend dependencies are installed
+if not exist "frontend\node_modules" (
+    echo [INFO] Installing frontend npm packages...
+    call npm --prefix frontend install
+)
+
 echo [1/2] Starting Python Flask Backend on Port 5000...
 start "NammaYatra Backend (Port 5000)" /D "%~dp0" cmd /k "python backend/app.py"
 
@@ -48,7 +54,7 @@ echo   Backend  : http://localhost:5000/api
 echo.
 echo   Demo Accounts:
 echo   - Customer : rahul@example.com / Customer@1234
-echo   - Admin    : admin@nammayatra.com / Admin@1234
+echo   - Admin    : admin@travelindia.com / Admin@1234 (or admin / Admin@1234)
 echo ======================================================================
 echo.
 timeout /t 3 >nul

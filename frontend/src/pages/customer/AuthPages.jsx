@@ -21,17 +21,17 @@ export function LoginPage() {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await login(email, password);
+      const res = await login(email.trim(), password.trim());
       if (res.success) {
         showToast('Welcome back! Login successful.', 'success');
-        if (res.user?.role === 'ADMIN') {
+        if (res.user?.role === 'ADMIN' || res.user?.role === 'STAFF') {
           navigate('/admin/dashboard');
         } else {
           navigate(redirect);
         }
       }
     } catch (err) {
-      showToast(err.message || 'Invalid email or password', 'error');
+      showToast(err.message || 'Invalid email/ID or password', 'error');
     } finally {
       setLoading(false);
     }
@@ -93,19 +93,23 @@ export function LoginPage() {
               Admin Console
             </button>
           </div>
+          <div className="text-[10px] text-slate-500 pt-1.5 border-t border-[#1D1B18]/5 flex flex-wrap justify-between gap-1 font-mono">
+            <span>Admin ID: <strong className="text-slate-800">admin</strong> or <strong className="text-slate-800">admin@travelindia.com</strong></span>
+            <span>Pass: <strong className="text-slate-800">Admin@1234</strong></span>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-[#1D1B18]/80 mb-1">Email Address</label>
+            <label className="block text-xs font-semibold text-[#1D1B18]/80 mb-1">Email Address or Admin ID</label>
             <div className="relative">
               <Mail className="w-4 h-4 absolute left-3.5 top-3.5 text-[#1D1B18]/40" />
               <input
-                type="email"
+                type="text"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="name@example.com"
+                placeholder="name@example.com or admin"
                 className="w-full rounded-xl border border-[#1D1B18]/15 bg-[#FAF8F5] py-2.5 pl-10 pr-3 text-xs text-[#1D1B18] focus:border-[#B99762] focus:outline-none focus:ring-1 focus:ring-[#B99762] transition-all"
               />
             </div>

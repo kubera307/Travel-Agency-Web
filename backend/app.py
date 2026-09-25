@@ -96,7 +96,7 @@ if __name__ == '__main__':
     print(">> TRAVEL INDIA - PYTHON FLASK BACKEND")
     print(f"[*] API Port     : http://localhost:{Config.PORT}/api")
     print(f"[*] Database     : {Config.DB_PATH}")
-    print(f"[*] Admin Login  : admin@travelindia.com / Admin@1234")
+    print(f"[*] Admin Login  : admin@travelindia.com / Admin@1234 (or ID: admin)")
     print(f"[*] Cust Login   : rahul@example.com / Customer@1234")
     print("=" * 60)
     app.run(host='0.0.0.0', port=Config.PORT, debug=Config.DEBUG)

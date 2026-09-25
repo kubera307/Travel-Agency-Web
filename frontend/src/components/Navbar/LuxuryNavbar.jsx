@@ -298,15 +298,6 @@ export default function LuxuryNavbar() {
               )}
             </div>
 
-            {/* Golden "Book My Trip →" Button */}
-            <Link
-              to={isAuthenticated ? "/custom-trip-planner" : "/login?redirect=/custom-trip-planner"}
-              className="inline-flex items-center gap-1.5 bg-[#B68D40] hover:bg-[#a77f34] text-white px-3.5 py-1.5 sm:px-4 sm:py-2 text-xs font-medium rounded-md transition shadow-sm whitespace-nowrap"
-            >
-              <span>Book My Trip</span>
-              <ArrowRight className="w-3 h-3" />
-            </Link>
-
             {/* 3-Line Drop Box (Policies & Info Menu) */}
             <div className="relative" ref={infoMenuRef}>
               <button
@@ -496,17 +487,6 @@ export default function LuxuryNavbar() {
                   })}
                 </div>
               </div>
-            </div>
-
-            <div className="pt-6 border-t border-white/10">
-              <Link
-                to={isAuthenticated ? "/custom-trip-planner" : "/login?redirect=/custom-trip-planner"}
-                onClick={() => setMobileMenuOpen(false)}
-                className="w-full inline-flex items-center justify-center gap-2 bg-[#B68D40] hover:bg-[#a77f34] text-white py-2.5 text-xs font-semibold rounded-md transition"
-              >
-                <span>Book My Trip</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
             </div>
           </div>
         </div>
